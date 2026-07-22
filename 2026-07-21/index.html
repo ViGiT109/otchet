@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отчёт по рекламе двух отелей — июль 2026</title>
+<style>
+  :root{
+    --paper:#f6f4ef; --surface:#fff; --surface-2:#efece4; --ink:#22272b; --ink-soft:#565d63;
+    --ink-faint:#868d92; --line:#e2ddd2; --accent:#12545c; --accent-soft:#d7e6e6;
+    --good:#2f7d54; --good-bg:#e4f0e8; --warn:#b07d1e; --warn-bg:#f5ecd6; --bad:#b64a3c; --bad-bg:#f6e2de;
+    --shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#14171a; --surface:#1c2024; --surface-2:#23282d; --ink:#e9e6e0; --ink-soft:#b3b8bd;
+    --ink-faint:#838a90; --line:#2f353b; --accent:#4fb4bd; --accent-soft:#123339;
+    --good:#5cbd86; --good-bg:#16301f; --warn:#d6a648; --warn-bg:#33290f; --bad:#e0806f; --bad-bg:#35211c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="light"]{--paper:#f6f4ef;--surface:#fff;--surface-2:#efece4;--ink:#22272b;--ink-soft:#565d63;--ink-faint:#868d92;--line:#e2ddd2;--accent:#12545c;--accent-soft:#d7e6e6;--good:#2f7d54;--good-bg:#e4f0e8;--warn:#b07d1e;--warn-bg:#f5ecd6;--bad:#b64a3c;--bad-bg:#f6e2de;--shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);}
+  :root[data-theme="dark"]{--paper:#14171a;--surface:#1c2024;--surface-2:#23282d;--ink:#e9e6e0;--ink-soft:#b3b8bd;--ink-faint:#838a90;--line:#2f353b;--accent:#4fb4bd;--accent-soft:#123339;--good:#5cbd86;--good-bg:#16301f;--warn:#d6a648;--warn-bg:#33290f;--bad:#e0806f;--bad-bg:#35211c;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;overflow-x:hidden}
+  .wrap{max-width:880px;margin:0 auto;padding:38px 22px 80px}
+  img{max-width:100%}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 12px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(27px,5vw,40px);line-height:1.12;margin:0 0 14px;text-wrap:balance;letter-spacing:-.01em}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13.5px;color:var(--ink-soft)}
+  .meta b{color:var(--ink);font-weight:600}
+
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px}
+  .toc a{font-size:12.5px;text-decoration:none;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:5px 12px}
+  .toc a:hover{color:var(--accent);border-color:var(--accent)}
+
+  section{margin-bottom:44px;scroll-margin-top:16px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--serif);font-size:23px;margin:0;letter-spacing:-.01em}
+  .sec-head .tag{font-size:13px;color:var(--ink-faint);font-style:italic}
+  .lead-in{font-size:15px;color:var(--ink-soft);margin:2px 0 20px;max-width:62ch}
+
+  .callout{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);border-radius:12px;padding:18px 20px;margin:0 0 26px}
+  .callout p{margin:0;font-size:15.5px;color:var(--ink)}
+  .callout b{color:var(--ink)}
+
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 8px}
+  @media (max-width:620px){.cards2{grid-template-columns:1fr}}
+  .vcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .vcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}
+  .vcard.lead::before{background:var(--good)}
+  .vcard.lag::before{background:var(--warn)}
+  .vcard h3{font-family:var(--serif);font-size:20px;margin:0 0 3px}
+  .vcard .site{font-size:12.5px;color:var(--ink-faint);margin:0 0 12px}
+  .vcard p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+  .status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:100px;margin-bottom:13px}
+  .status.good{background:var(--good-bg);color:var(--good)}
+  .status.warn{background:var(--warn-bg);color:var(--warn)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 20px}
+  @media (max-width:620px){.tiles{grid-template-columns:1fr}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+  .tile .k{font-size:12.5px;color:var(--ink-faint);margin:0 0 8px;font-weight:600}
+  .tile .v{font-size:15px;color:var(--ink);font-weight:600}
+  .tile .was{color:var(--ink-faint);text-decoration:line-through;font-weight:400}
+  .tile .arrow{color:var(--good);font-weight:700}
+  .tile.big .v{font-size:24px;font-family:var(--serif)}
+
+  /* weekly bar chart */
+  .chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 12px;box-shadow:var(--shadow);margin-bottom:16px}
+  .chart .cap{font-size:13px;font-weight:600;color:var(--ink-soft);margin:0 0 16px}
+  .cols{display:flex;align-items:flex-end;gap:10px;height:150px;padding-bottom:2px}
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .col .bar{width:100%;max-width:46px;border-radius:6px 6px 0 0;position:relative}
+  .col .barval{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px}
+  .col .lbl{font-size:11px;color:var(--ink-faint);margin-top:7px;text-align:center;line-height:1.2}
+  .bar.bad{background:var(--bad)}
+  .bar.mid{background:var(--warn)}
+  .bar.good{background:var(--good)}
+  .bar.accent{background:var(--accent)}
+
+  /* metric list */
+  .metrics{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  .mrow{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;padding:13px 18px;border-top:1px solid var(--line)}
+  .mrow:first-child{border-top:none}
+  .m-name{font-size:14.5px;color:var(--ink);font-weight:600}
+  .m-name span{display:block;font-size:12.5px;color:var(--ink-faint);font-weight:400;margin-top:1px}
+  .m-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .nums{font-size:13px;color:var(--ink-soft);white-space:nowrap}
+  .nums b{color:var(--ink);font-weight:700;font-size:14.5px}
+  .chip{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap}
+  .chip.good{background:var(--good-bg);color:var(--good)}
+  .chip.warn{background:var(--warn-bg);color:var(--warn)}
+  .chip.bad{background:var(--bad-bg);color:var(--bad)}
+  .chip.flat{background:var(--surface-2);color:var(--ink-soft)}
+
+  /* progress checklist */
+  .checks{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  .checks li{display:flex;gap:13px;padding:15px 18px;border-top:1px solid var(--line)}
+  .checks li:first-child{border-top:none}
+  .ic{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-top:1px}
+  .ic.done{background:var(--good)} .ic.prog{background:var(--warn)} .ic.wait{background:var(--ink-faint)}
+  .checks .t{font-size:14.5px;color:var(--ink);font-weight:600}
+  .checks .d{font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+
+  /* plan steps */
+  .rec{display:flex;gap:16px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:13px}
+  .rec .num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--accent);line-height:1;min-width:26px}
+  .rec .body{flex:1}
+  .rec h4{margin:1px 0 7px;font-size:16.5px;font-family:var(--serif)}
+  .rec p{font-size:14px;color:var(--ink-soft);margin:0 0 6px}
+  .rec p b{color:var(--ink)}
+  .rec .why{font-size:13px;color:var(--accent);font-weight:600;margin:0}
+
+  .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow)}
+  .box.good-b{background:var(--good-bg);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+  .box.ask{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 34%,transparent)}
+  .box h3{margin:0 0 10px;font-family:var(--serif);font-size:18px}
+  .box ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .box li{margin-bottom:8px}
+  .box p{margin:0 0 10px;font-size:14.5px;color:var(--ink-soft)}
+
+  .money{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 18px}
+  @media (max-width:620px){.money{grid-template-columns:1fr}}
+  .money .tile .v{font-size:20px;font-family:var(--serif)}
+
+  .caveats{border-top:1px solid var(--line);padding-top:22px;margin-top:10px}
+  .caveats h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin:0 0 12px}
+  .caveats ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .foot{margin-top:36px;font-size:13px;color:var(--ink-faint);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="../" style="display:inline-block;font-size:13px;color:var(--accent);text-decoration:none;margin-bottom:18px">← Все отчёты</a>
+
+  <header class="masthead">
+    <p class="eyebrow">Отчёт по рекламе · Яндекс Директ через LidFly</p>
+    <h1>Как идут дела с рекламой двух отелей</h1>
+    <div class="meta">
+      <span><b>Дата:</b> 21 июля 2026</span>
+      <span><b>Период:</b> с прошлого отчёта (2 июня) по 20 июля</span>
+      <span><b>Отели:</b> Хоум и Бизнес, Магнитогорск</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#glavnoe">Коротко о главном</a>
+    <a href="#obeshchali">Что обещали → что сделали</a>
+    <a href="#rezultat">Главный результат</a>
+    <a href="#rynok">На фоне рынка</a>
+    <a href="#plan">Что дальше</a>
+    <a href="#budget">Про бюджет</a>
+    <a href="#ot-vas">Что нужно от вас</a>
+  </nav>
+
+  <!-- ГЛАВНОЕ -->
+  <section id="glavnoe">
+    <div class="callout">
+      <p><b>Если совсем коротко:</b> с прошлого отчёта мы навели порядок в аккаунте, отключили каналы, которые жгли деньги впустую, и перевели обе поисковые кампании на «умную» стратегию под обращения. Итог: реклама <b>обучилась и работает стабильно</b>, цена обращения у Бизнес-отеля держится в здоровом коридоре (~460–780 ₽), обращений стало больше и ровнее. Главное ограничение теперь — не настройки, а бюджет: кампании выбирают его полностью и упираются в потолок. Поэтому наше основное предложение — <b>на 1–2 месяца поднять бюджет</b> и посмотреть, сколько обращений даст уже проверенный канал.</p>
+    </div>
+
+    <div class="cards2">
+      <div class="vcard lead">
+        <span class="status good"><span class="dot"></span>Обучилась, стабильна</span>
+        <h3>Бизнес-отель</h3>
+        <p class="site">businesshotel74.ru</p>
+        <p>Перевели на стратегию «под обращения» — вышли из июньской просадки, цена обращения в норме, обращений больше. Кампания упёрлась в бюджет — готова к масштабированию.</p>
+      </div>
+      <div class="vcard lag">
+        <span class="status warn"><span class="dot"></span>Подтягиваем</span>
+        <h3>Хоум-отель</h3>
+        <p class="site">homehotel74.ru</p>
+        <p>Обращения идут, но ровнее пока не стал. 18 июля перевели и его на ту же стратегию — результат ждём. Часть резерва — на стороне сайта; это мы исследуем сами, действий с вашей стороны не нужно.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОБЕЩАЛИ -->
+  <section id="obeshchali">
+    <div class="sec-head"><h2>Что обещали в прошлый раз — и что из этого сделали</h2></div>
+    <p class="lead-in">В отчёте от 2 июня мы наметили план и задали вам вопросы. Вот честный статус по каждому пункту.</p>
+
+    <ul class="checks">
+      <li>
+        <div class="ic done">✓</div>
+        <div><div class="t">Ваши ответы на вопросы — получили</div>
+        <div class="d">15 июня вы ответили на ключевые вопросы (звёздность, юрлицо, аудитория, конкуренты). Это разблокировало все правки.</div></div>
+      </li>
+      <li>
+        <div class="ic done">✓</div>
+        <div><div class="t">«Волна 1» — чистка утечек бюджета — сделана</div>
+        <div class="d">Отключили РСЯ-ретаргетинг (давал пустые заявки — ваше наблюдение подтвердилось). Почистили нецелевые запросы у Хоум-отеля. Оставили только поисковые кампании — там реально идут звонки и брони.</div></div>
+      </li>
+      <li>
+        <div class="ic done">✓</div>
+        <div><div class="t">Перевод на «умную» стратегию под обращения — сделан</div>
+        <div class="d">Сначала Бизнес-отель, с 18 июля — и Хоум. Обе кампании теперь оптимизируются на обращения (звонки, сообщения, формы), а не просто на клики. Именно это вывело Бизнес из просадки и стабилизировало его.</div></div>
+      </li>
+      <li>
+        <div class="ic done">✓</div>
+        <div><div class="t">Дополнительно: навели порядок в товарных карточках, ценах и текстах</div>
+        <div class="d">Включили показ номеров с ценами прямо в поиске, синхронизировали цены с сайтом (убрали риск штрафа), привели рекламу к новым требованиям закона и к новому формату объявлений Яндекса (старый формат отменяют с июля).</div></div>
+      </li>
+      <li>
+        <div class="ic prog">→</div>
+        <div><div class="t">Усиление Хоум-отеля — в проработке</div>
+        <div class="d">Следующий шаг — изучить, что можно улучшить на стороне Хоума (в том числе на сайте). Сначала исследование, затем — точечные предложения. Это наша зона работы.</div></div>
+      </li>
+      <li>
+        <div class="ic done">✓</div>
+        <div><div class="t">Регулярный мониторинг — настроен</div>
+        <div class="d">Еженедельно отслеживаем расход, заявки и их стоимость по каждой кампании.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <section id="rezultat">
+    <div class="sec-head"><h2>Главный результат — честно, по неделям</h2><span class="tag">Бизнес-отель</span></div>
+    <p class="lead-in">После перехода на стратегию «под обращения» Бизнес-отель вышел из июньской просадки и работает стабильно. Не «подешевело в разы» — а <b>вернулись к нормальной цене обращения и держим её ровно, при большем числе обращений</b>.</p>
+
+    <div class="tiles">
+      <div class="tile big">
+        <p class="k">Цена обращения сейчас</p>
+        <p class="v">460–780 ₽</p>
+        <p class="k" style="margin:6px 0 0">норма ~700 ₽; всплеск до 2 600 ₽ был разовым</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Обращений за лучшую неделю</p>
+        <p class="v">14</p>
+        <p class="k" style="margin:6px 0 0">13–19 июля · обычно 6–8</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Режим рекламы</p>
+        <p class="v" style="font-size:19px">Обучена, стабильна</p>
+        <p class="k" style="margin:6px 0 0">обе кампании — под обращения</p>
+      </div>
+    </div>
+
+    <div class="chart">
+      <p class="cap">Цена одного обращения по неделям, ₽ — Бизнес-отель (чем ниже, тем лучше)</p>
+      <div class="cols">
+        <div class="col"><span class="barval">357</span><div class="bar good" style="height:14%"></div><span class="lbl">18 мая</span></div>
+        <div class="col"><span class="barval">508</span><div class="bar good" style="height:19%"></div><span class="lbl">1 июня</span></div>
+        <div class="col"><span class="barval">727</span><div class="bar good" style="height:28%"></div><span class="lbl">8 июня</span></div>
+        <div class="col"><span class="barval">2 622</span><div class="bar bad" style="height:100%"></div><span class="lbl">15 июня<br>всего&nbsp;2&nbsp;обращения</span></div>
+        <div class="col"><span class="barval">904</span><div class="bar mid" style="height:35%"></div><span class="lbl">22 июня</span></div>
+        <div class="col"><span class="barval">674</span><div class="bar good" style="height:26%"></div><span class="lbl">29 июня</span></div>
+        <div class="col"><span class="barval">778</span><div class="bar good" style="height:30%"></div><span class="lbl">6 июля</span></div>
+        <div class="col"><span class="barval">461</span><div class="bar good" style="height:18%"></div><span class="lbl">13–19 июля<br>14&nbsp;обращений</span></div>
+      </div>
+    </div>
+    <p class="lead-in" style="margin-top:2px;font-size:13px;color:var(--ink-faint)">Всплеск 2 622 ₽ (неделя 15 июня) — это не «стартовая норма», а разовая просадка: на той неделе пришло всего 2 обращения при обычном расходе. Обычный уровень — 350–900 ₽; на последней полной неделе — 461 ₽ при 14 обращениях.</p>
+
+    <div class="callout">
+      <p><b>Что такое «обращение».</b> Это когда человек нажал на сайте «позвонить», написал в мессенджер или отправил форму. Это заявка об интересе — <b>ещё не подтверждённое заселение</b>: часть обращений до брони не доходит. Мы считаем именно обращения, потому что это то, чем реклама реально управляет. Всего с начала июня по двум отелям набралось <b>около 80 обращений</b>, и бюджет при этом выбирается полностью каждую неделю.</p>
+    </div>
+
+    <div class="callout" style="background:var(--good-bg);border-color:color-mix(in srgb,var(--good) 30%,transparent)">
+      <p><b>Хоум-отель:</b> обращения тоже идут — последняя неделя ~865 ₽ за обращение / 7 обращений. Ровнее он пока не стал, но 18 июля мы перевели и его на ту же стратегию «под обращения» — эффект ждём в ближайшие недели.</p>
+    </div>
+  </section>
+
+  <!-- РЫНОК -->
+  <section id="rynok">
+    <div class="sec-head"><h2>Как наши сайты выглядят на фоне рынка</h2></div>
+    <p class="lead-in">Отдельно сравнили оба сайта с рынком (вся отрасль «небольшие отели, Россия») и с похожими отелями — данные из Яндекс.Метрики. Коротко: Бизнес — здоровый лидер, Хоум отстаёт, а общее слабое место обоих — качество рекламного трафика.</p>
+
+    <div class="metrics" style="margin-bottom:18px">
+      <div class="mrow"><div class="m-name">Бизнес-отель: бесплатный поиск<span>сколько людей приходит из поиска сами, без рекламы</span></div><div class="m-right"><span class="nums">мы <b>3 696</b> · рынок 1 730</span><span class="chip good">вдвое сильнее рынка</span></div></div>
+      <div class="mrow"><div class="m-name">Бизнес-отель: вовлечённость<span>сколько страниц смотрят и как долго остаются</span></div><div class="m-right"><span class="nums">2,4 стр · 2м17с</span><span class="chip good">выше рынка</span></div></div>
+      <div class="mrow"><div class="m-name">Бизнес-отель: отказы с рекламы<span>ушли сразу после клика по рекламе</span></div><div class="m-right"><span class="nums">мы <b>30–36%</b> · рынок 20%</span><span class="chip bad">хуже рынка — точка роста</span></div></div>
+      <div class="mrow"><div class="m-name">Хоум-отель: всего визитов за год<span>общий трафик сайта</span></div><div class="m-right"><span class="nums">мы <b>8 330</b> · рынок 11 845</span><span class="chip bad">на 42% ниже рынка</span></div></div>
+      <div class="mrow"><div class="m-name">Хоум-отель: отказы<span>ушли почти сразу</span></div><div class="m-right"><span class="nums">мы <b>24,5%</b> · рынок 21,7%</span><span class="chip bad">хуже рынка и конкурентов</span></div></div>
+      <div class="mrow"><div class="m-name">Хоум-отель: время на сайте с рекламы<span>сколько задерживаются пришедшие с рекламы</span></div><div class="m-right"><span class="nums">мы <b>52 сек</b> · похожие 1м28с</span><span class="chip bad">заметно ниже</span></div></div>
+    </div>
+
+    <div class="box good-b">
+      <h3>Что это значит простыми словами</h3>
+      <p style="color:var(--ink)"><b>Бизнес-отель</b> — крепкий: люди сами находят его в поиске и вовлекаются в сайт лучше, чем в среднем по рынку. <b>Хоум-отель</b> отстаёт по общему трафику, и с рекламы к нему заходят и задерживаются меньше, чем у похожих отелей. Это <b>не повод тормозить рекламу</b> — её по Хоуму мы масштабируем параллельно. Просто у Хоума есть отдельный резерв на стороне сайта, и мы хотим его аккуратно изучить и предложить точечные улучшения — сначала исследование, без резких выводов.</p>
+      <p style="color:var(--ink-soft);margin-top:10px"><b>Важно:</b> это наша зона работы. Никаких действий по сайту с вашей стороны прямо сейчас не требуется — когда изучим, придём с конкретными предложениями.</p>
+    </div>
+  </section>
+
+  <!-- ПЛАН -->
+  <section id="plan">
+    <div class="sec-head"><h2>Что делаем дальше</h2><span class="tag">по порядку</span></div>
+
+    <div class="rec">
+      <div class="num">1</div>
+      <div class="body">
+        <h4>Масштабируем проверенный канал</h4>
+        <p><b>Что:</b> Бизнес обучен и держит нормальную цену обращения, но упирается в бюджет — деньги выбираются полностью. Предлагаем поднять бюджет (детали в разделе ниже) и получить больше обращений по уже понятной цене.</p>
+        <p class="why">→ больше обращений с канала, который уже работает</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">2</div>
+      <div class="body">
+        <h4>Параллельно изучаем, как усилить Хоум-отель</h4>
+        <p><b>Что:</b> обращения по Хоуму идут; отдельно исследуем, что удерживает посетителей (в том числе на стороне сайта), и предложим точечные шаги. Сначала анализ — потом аккуратные правки, без резких движений.</p>
+        <p class="why">→ меньше потерь = больше обращений с того же бюджета</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">3</div>
+      <div class="body">
+        <h4>Доводим стратегию до «эталона» и фиксируем цель по цене</h4>
+        <p><b>Что:</b> когда накопим стабильный поток обращений, переведём кампании на режим с конкретной целевой ценой обращения — и будем держать её автоматически.</p>
+        <p class="why">→ предсказуемая цена обращения месяц к месяцу</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- БЮДЖЕТ -->
+  <section id="budget">
+    <div class="sec-head"><h2>Про бюджет — почему предлагаем добавить</h2></div>
+    <p class="lead-in">Куда идут деньги, почему это правильно сейчас — и почему мы рекомендуем поднять бюджет.</p>
+
+    <div class="money">
+      <div class="tile"><p class="k">Сейчас</p><p class="v">~60 000 ₽/мес</p><p class="k" style="margin:6px 0 0">с НДС · всё на поиск</p></div>
+      <div class="tile" style="border-color:color-mix(in srgb,var(--accent) 45%,transparent)"><p class="k">Предлагаем</p><p class="v" style="color:var(--accent)">~100 000 ₽/мес</p><p class="k" style="margin:6px 0 0">на 1–2 месяца, как тест</p></div>
+      <div class="tile"><p class="k">Каналов в работе</p><p class="v">Только поиск</p><p class="k" style="margin:6px 0 0">2 кампании: Хоум + Бизнес</p></div>
+    </div>
+
+    <div class="box">
+      <h3>Логика простая: сначала вытягиваем главное</h3>
+      <ul>
+        <li><b>Убрали то, что жгло деньги.</b> Реклама на сайтах-партнёрах (РСЯ-ретаргетинг) давала пустые обращения — вы сами это заметили, Метрика подтвердила. Её выключили полностью.</li>
+        <li><b>Сосредоточили весь бюджет на поиске.</b> Поиск — это горячий спрос: человек прямо сейчас ищет гостиницу в Магнитогорске. Здесь реально идут звонки и брони, и здесь самая низкая цена обращения.</li>
+        <li><b>Настроили и обучили стратегию.</b> Обе кампании вышли на устойчивый режим «под обращения» — цена обращения в норме и держится ровно.</li>
+        <li><b>Вторичное — потом.</b> Ретаргетинг и другие каналы имеет смысл подключать, только когда основной канал (поиск) выжат и настроен.</li>
+      </ul>
+    </div>
+
+    <div class="box ask" style="margin-top:16px">
+      <h3>Предложение: тест на ~100 000 ₽/мес (1–2 месяца)</h3>
+      <p><b>Почему сейчас.</b> Кампании обучены и держат здоровую цену обращения. При этом бюджет выбирается полностью каждую неделю — значит, мы упёрлись в потолок показов, а не в эффективность. Спрос есть, а денег на его выкуп не хватает.</p>
+      <p><b>Что даёт +40 000 ₽/мес.</b> Ориентировочно <b>+30–45 обращений в месяц</b> по двум отелям (это оценка: при росте бюджета цена обращения обычно немного подрастает). Часть из них — клики «позвонить» и сообщения, до заселения дойдёт меньше — но и верх воронки, из которого берутся брони, станет шире.</p>
+      <ul>
+        <li><b>Лучший исход:</b> реклама окупается в плюс → наращиваем дальше и развиваем.</li>
+        <li><b>Худший исход:</b> выходим в ноль → мы узнали потолок спроса и спокойно возвращаем бюджет обратно. В минус никто не уходит.</li>
+      </ul>
+      <p style="margin-top:10px"><b>Почему тест на 1–2 месяца:</b> чтобы решение было по факту, а не по одной удачной или неудачной неделе.</p>
+    </div>
+  </section>
+
+  <!-- ОТ ВАС -->
+  <section id="ot-vas">
+    <div class="sec-head"><h2>Что нужно от вас</h2></div>
+    <div class="box ask">
+      <p>Почти всё для работы у нас уже есть. От вас — два решения:</p>
+      <ul>
+        <li><b>Бюджет.</b> Готовы ли поднять до ~100 000 ₽/мес на 1–2 месяца как тест (см. раздел про бюджет выше)? Сейчас это главный рычаг роста — всё остальное уже настроено и обучено.</li>
+        <li><b>Ориентир по цене обращения.</b> Хотя бы вилкой: «дешевле X ₽ — отлично, дороже Y ₽ — уже дорого». Это поможет докрутить стратегию под вашу экономику. Как только реклама доучится, мы принесём фактическую цену — и вы подтвердите цель.</li>
+      </ul>
+      <p style="margin-top:4px;color:var(--ink-soft)">По сайту Хоума ничего делать не нужно — мы сначала сами всё изучим и придём с конкретикой.</p>
+    </div>
+  </section>
+
+  <div class="caveats">
+    <h3>Чтобы читать честно</h3>
+    <ul>
+      <li><b>«Обращение» ≠ заселение.</b> Это звонок-клик, сообщение в мессенджер или форма на сайте — заявка об интересе. До реальной брони доходит часть обращений (по вашим данным — большинство, но не все).</li>
+      <li>Цена обращения — из рекламного кабинета (без НДС); бюджет показан так, как вы его оплачиваете (с НДС).</li>
+      <li>Цифры по неделям гуляют: обращений немного, и одна-две заявки заметно двигают среднее. Поэтому смотрим на тренд, а не на отдельную неделю.</li>
+      <li>Сравнение с рынком — снимок на 17 июля из Яндекс.Метрики; проценты показывают, насколько рынок отличается от нас, а не рост во времени.</li>
+    </ul>
+  </div>
+
+  <p class="foot">Отчёт подготовлен в рамках управления рекламой через LidFly · 21.07.2026</p>
+
+</div>
+</body>
+</html>

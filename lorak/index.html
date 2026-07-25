@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>КДЛ «ЛораК» — отчёты по рекламе и поиску</title>
+<style>
+  :root{
+    color-scheme: light;
+    --plane:#F4F6F5; --surface:#FFFFFF; --ink:#0F1A1D; --ink-2:#4B5A5E;
+    --muted:#7E8D91; --hair:#DCE4E3; --mark-ink:#00636F;
+    --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --serif:Georgia,"Noto Serif","Liberation Serif","Times New Roman",serif;
+    --mono:"Cascadia Mono",Consolas,"SF Mono",Menlo,"DejaVu Sans Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:where(:not([data-theme="light"])){
+      color-scheme: dark;
+      --plane:#0B1114; --surface:#141B20; --ink:#EEF3F3; --ink-2:#A7B6B9;
+      --muted:#7E8D91; --hair:#222E33; --mark-ink:#63C4CE;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --plane:#0B1114; --surface:#141B20; --ink:#EEF3F3; --ink-2:#A7B6B9;
+    --muted:#7E8D91; --hair:#222E33; --mark-ink:#63C4CE;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--serif);
+    font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:clamp(40px,8vw,88px) clamp(20px,5vw,32px) 64px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:baseline;
+    justify-content:space-between;flex-wrap:wrap;gap:4px 24px;
+    padding-bottom:18px;margin-bottom:26px;border-bottom:2px solid var(--ink)}
+  .eyebrow b{color:var(--ink);font-weight:600;letter-spacing:.06em}
+  h1{font-family:var(--sans);font-weight:800;letter-spacing:-.025em;line-height:1.08;
+    font-size:clamp(28px,5vw,42px);margin:0 0 20px;text-wrap:balance}
+  p{margin:0 0 1.1em;color:var(--ink-2)}
+  ul.reports{list-style:none;margin:34px 0 0;padding:0;display:flex;flex-direction:column;gap:1px;
+    background:var(--hair);border:1px solid var(--hair);border-radius:6px;overflow:hidden}
+  ul.reports li{background:var(--surface)}
+  ul.reports a{display:block;padding:20px 22px;text-decoration:none;color:inherit;
+    transition:background .15s}
+  ul.reports a:hover,ul.reports a:focus-visible{background:var(--plane)}
+  ul.reports a:focus-visible{outline:2px solid var(--mark-ink);outline-offset:-2px}
+  .d{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--mark-ink);display:block;margin-bottom:8px}
+  .t{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:-.015em;
+    display:block;margin-bottom:6px;color:var(--ink)}
+  .s{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.55;display:block}
+  footer{margin-top:44px;padding-top:22px;border-top:1px solid var(--hair);
+    font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><span><b>КДЛ «ЛораК»</b> · Уфа</span><span>отчёты по рекламе и поиску</span></div>
+
+  <h1>Отчёты</h1>
+  <p>Здесь публикуются разборы по рекламе и поиску для сети клинико-диагностических
+  лабораторий «ЛораК». Каждый отчёт — на свою дату, старые не перезаписываются.</p>
+
+  <ul class="reports">
+    <li>
+      <a href="2026-07-25/">
+        <span class="d">25 июля 2026</span>
+        <span class="t">Что происходит в поиске: полный разбор ниши</span>
+        <span class="s">Девять показателей по данным пяти инструментов Яндекса, Метрики и прайса.
+        Где мы стоим по денежным словам, размер спроса, доля бренда против КДЛ и Инвитро,
+        план работ и вопросы к владельцу.</span>
+      </a>
+    </li>
+  </ul>
+
+  <footer>
+    Страницы закрыты от индексации поисковиками. Ссылку не размещать публично —
+    внутри коммерческие данные: цены, разбор конкурентов, слабые места сайта.
+  </footer>
+</div>
+</body>
+</html>

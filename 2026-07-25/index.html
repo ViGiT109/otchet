@@ -1,0 +1,1851 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>ЛораК — что происходит в поиске. Отчёт для владельца</title>
+</head>
+<body>
+<style>
+/* ─────────────── токены ─────────────── */
+:root{
+  color-scheme: light;
+  --plane:#F4F6F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1F0;
+  --ink:#0F1A1D;
+  --ink-2:#4B5A5E;
+  --muted:#7E8D91;
+  --hair:#DCE4E3;
+  --rule:#C6D2D1;
+  --mark:#0093A3;          /* валидированный цвет данных, light */
+  --mark-soft:rgba(0,147,163,.13);
+  --mark-ink:#00636F;      /* текстовый акцент */
+  --good:#0ca30c;
+  --warn:#fab219;
+  --crit:#d03b3b;
+  --good-soft:rgba(12,163,12,.12);
+  --warn-soft:rgba(250,178,25,.16);
+  --crit-soft:rgba(208,59,59,.11);
+  --shadow:0 1px 2px rgba(15,26,29,.05), 0 8px 24px -16px rgba(15,26,29,.18);
+
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Noto Serif","Liberation Serif","Times New Roman",serif;
+  --mono:"Cascadia Mono",Consolas,"SF Mono",Menlo,"DejaVu Sans Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --plane:#0B1114;
+    --surface:#141B20;
+    --surface-2:#1B242A;
+    --ink:#EEF3F3;
+    --ink-2:#A7B6B9;
+    --muted:#7E8D91;
+    --hair:#222E33;
+    --rule:#2E3C42;
+    --mark:#22A2AF;        /* валидированный цвет данных, dark */
+    --mark-soft:rgba(34,162,175,.18);
+    --mark-ink:#63C4CE;
+    --good-soft:rgba(12,163,12,.20);
+    --warn-soft:rgba(250,178,25,.18);
+    --crit-soft:rgba(208,59,59,.20);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0B1114; --surface:#141B20; --surface-2:#1B242A;
+  --ink:#EEF3F3; --ink-2:#A7B6B9; --muted:#7E8D91;
+  --hair:#222E33; --rule:#2E3C42;
+  --mark:#22A2AF; --mark-soft:rgba(34,162,175,.18); --mark-ink:#63C4CE;
+  --good-soft:rgba(12,163,12,.20); --warn-soft:rgba(250,178,25,.18); --crit-soft:rgba(208,59,59,.20);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.6);
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --plane:#F4F6F5; --surface:#FFFFFF; --surface-2:#EDF1F0;
+  --ink:#0F1A1D; --ink-2:#4B5A5E; --muted:#7E8D91;
+  --hair:#DCE4E3; --rule:#C6D2D1;
+  --mark:#0093A3; --mark-soft:rgba(0,147,163,.13); --mark-ink:#00636F;
+  --good-soft:rgba(12,163,12,.12); --warn-soft:rgba(250,178,25,.16); --crit-soft:rgba(208,59,59,.11);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--ink);
+  font-family:var(--serif);font-size:17.5px;line-height:1.66;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ─────────────── каркас ─────────────── */
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.col{max-width:660px}
+section{padding:clamp(44px,6vw,76px) 0;border-top:1px solid var(--hair)}
+section:first-of-type{border-top:0}
+
+/* ─────────────── типографика ─────────────── */
+h1,h2,h3,h4{font-family:var(--sans);font-weight:800;letter-spacing:-.025em;
+  text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,6vw,58px);line-height:1.04}
+h2{font-size:clamp(25px,3.6vw,38px);line-height:1.12;margin-bottom:.5em}
+h3{font-size:clamp(19px,2.2vw,23px);line-height:1.25;letter-spacing:-.018em;margin:0 0 .4em}
+h4{font-size:16px;letter-spacing:-.01em;margin:0 0 .3em}
+p{margin:0 0 1.05em}
+p:last-child{margin-bottom:0}
+strong{font-weight:700;color:var(--ink)}
+a{color:var(--mark-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;font-weight:600;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--hair)}
+.lede{font-size:clamp(19px,2.1vw,22px);line-height:1.5;color:var(--ink-2)}
+.note{font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--muted);
+  letter-spacing:.005em}
+.plain{background:var(--mark-soft);border-left:3px solid var(--mark);
+  padding:16px 20px;margin:22px 0 0;border-radius:0 4px 4px 0}
+.plain > .plain-h{font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--mark-ink);
+  display:block;margin-bottom:6px}
+.plain p{font-size:16.5px;margin-bottom:.6em}
+
+/* ─────────────── шапка ─────────────── */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--plane) 88%,transparent);
+  backdrop-filter:blur(12px) saturate(150%);border-bottom:1px solid var(--hair)}
+.topbar-in{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,40px);
+  display:flex;align-items:center;gap:20px;height:52px}
+.brandmark{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink);white-space:nowrap;flex-shrink:0}
+.brandmark span{color:var(--mark-ink)}
+nav.spy{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;flex:1}
+nav.spy::-webkit-scrollbar{display:none}
+nav.spy a{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;
+  padding:6px 9px;border-radius:3px;white-space:nowrap;transition:color .15s,background .15s}
+nav.spy a:hover{color:var(--ink);background:var(--surface-2)}
+nav.spy a[aria-current="true"]{color:var(--mark-ink);background:var(--mark-soft);font-weight:600}
+
+/* ─────────────── титул ─────────────── */
+.hero{padding-top:clamp(40px,7vw,84px);padding-bottom:clamp(36px,5vw,60px)}
+.specimen{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 26px;
+  padding-bottom:20px;margin-bottom:26px;border-bottom:2px solid var(--ink)}
+.specimen b{color:var(--ink);font-weight:600;letter-spacing:.06em}
+.hero h1{margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--mark-ink)}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:30px;margin-top:34px}
+@media (min-width:860px){.hero-grid{grid-template-columns:1.35fr 1fr;gap:48px;align-items:start}}
+
+/* ─────────────── плитки-цифры ─────────────── */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,168px),1fr));
+  gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:6px;overflow:hidden}
+.tile{background:var(--surface);padding:18px 18px 20px}
+.tile .k{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px;line-height:1.4}
+.tile .v{font-family:var(--sans);font-size:clamp(28px,4vw,38px);font-weight:800;
+  letter-spacing:-.03em;line-height:1;display:block;color:var(--ink)}
+.tile .v small{font-size:.5em;font-weight:700;letter-spacing:-.01em;color:var(--ink-2)}
+.tile .s{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);
+  display:block;margin-top:9px;line-height:1.45}
+.tile.hot .v{color:var(--crit)}
+.tile.warm .v{color:var(--mark-ink)}
+
+/* ─────────────── панель данных ─────────────── */
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:8px;
+  box-shadow:var(--shadow);margin:30px 0}
+.panel-h{padding:18px 22px 14px;border-bottom:1px solid var(--hair)}
+.panel-h h4{font-family:var(--sans);font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin:0}
+.panel-h .sub{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+.panel-b{padding:22px}
+.panel-f{padding:0 22px 16px}
+
+/* ─────────────── столбчатая: обрыв CTR ─────────────── */
+/* Значение — отдельная колонка сетки, а не абсолютная метка:
+   так подпись не может вылезти за трек на узком экране */
+.bars{display:flex;flex-direction:column;gap:14px}
+.bar-row{display:grid;grid-template-columns:minmax(64px,88px) minmax(0,1fr) 76px;gap:10px;align-items:center;
+  cursor:default;border-radius:4px;outline-offset:3px}
+.bar-row .bl{font-family:var(--mono);font-size:12px;color:var(--ink-2);text-align:right;
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;line-height:1.35}
+.bar-track{position:relative;height:26px;background:var(--surface-2);border-radius:3px}
+.bar-fill{position:absolute;inset:0 auto 0 0;background:var(--mark);
+  border-radius:2px 4px 4px 2px;min-width:2px;transition:filter .15s}
+.bar-row:hover .bar-fill,.bar-row:focus-visible .bar-fill{filter:brightness(1.12)}
+.bar-row:focus-visible{outline:2px solid var(--mark-ink)}
+.bar-val{font-family:var(--mono);font-size:12.5px;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;line-height:1.3}
+.bar-val em{font-style:normal;font-weight:400;color:var(--muted)}
+.bar-fill[data-zero="1"]{background:var(--crit)}
+.bar-note{font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--muted);
+  padding-left:74px;margin-top:16px}
+@media (max-width:560px){
+  .bar-row{grid-template-columns:minmax(52px,72px) minmax(0,1fr) auto;gap:8px}
+  .bar-val{font-size:12px}
+  .bar-val em{display:none}
+  .bar-note{padding-left:0}
+}
+
+/* ─────────────── ридаут позиции (подпись проекта) ─────────────── */
+.readouts{display:flex;flex-direction:column;gap:1px;background:var(--hair)}
+.ro{background:var(--surface);padding:15px 22px 17px}
+.ro-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;margin-bottom:11px}
+.ro-q{font-family:var(--mono);font-size:13.5px;font-weight:600;color:var(--ink);
+  letter-spacing:.005em}
+.ro-meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  font-variant-numeric:tabular-nums;margin-left:auto;text-align:right;line-height:1.4}
+.ro-meta b{display:block;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.01em}
+.scale{position:relative;height:34px}
+.scale-band{position:absolute;top:0;height:18px;background:var(--good-soft);
+  border-left:1px solid var(--good);border-right:1px dashed transparent;border-radius:2px}
+.scale-axis{position:absolute;top:17px;left:0;right:0;height:1px;background:var(--rule)}
+.scale-tick{position:absolute;top:17px;width:1px;height:5px;background:var(--rule)}
+.scale-tick i{position:absolute;top:7px;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:10px;font-style:normal;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.scale-mark{position:absolute;top:2px;width:3px;height:15px;border-radius:2px;
+  background:var(--crit);box-shadow:0 0 0 2px var(--surface)}
+.scale-mark[data-flag="good"]{background:var(--good)}
+.scale-mark[data-flag="warn"]{background:var(--warn)}
+.band-lbl{position:absolute;top:1px;font-family:var(--mono);font-size:9.5px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--good);left:6px}
+
+/* чипы-фильтры */
+.filters{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 18px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;
+  padding:7px 12px;border:1px solid var(--rule);background:transparent;color:var(--ink-2);
+  border-radius:20px;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--mark);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--plane);font-weight:600}
+.chip:focus-visible{outline:2px solid var(--mark-ink);outline-offset:2px}
+
+/* ─────────────── флаги-статусы ─────────────── */
+.flag{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
+  font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 8px;border-radius:3px;white-space:nowrap}
+.flag-crit{background:var(--crit-soft);color:var(--crit)}
+.flag-warn{background:var(--warn-soft);color:#8a5e00}
+:root[data-theme="dark"] .flag-warn,
+:root:where(:not([data-theme="light"])) .flag-warn{color:var(--warn)}
+@media (prefers-color-scheme:light){:root:where(:not([data-theme="dark"])) .flag-warn{color:#8a5e00}}
+.flag-good{background:var(--good-soft);color:#0a7a0a}
+:root[data-theme="dark"] .flag-good{color:var(--good)}
+.flag-none{background:var(--surface-2);color:var(--muted)}
+.flag i{font-style:normal;font-size:12px;line-height:1}
+
+/* ─────────────── таблицы ─────────────── */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:min(100%,440px);
+  font-family:var(--mono);font-size:12.5px}
+caption{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);padding-bottom:10px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--hair);
+  vertical-align:top;line-height:1.45}
+th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;border-bottom:1px solid var(--rule);white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+tr.mine{background:var(--mark-soft)}
+tr.mine:hover{background:var(--mark-soft)}
+tr.mine td{font-weight:600}
+
+/* мини-бар внутри ячейки */
+.cellbar{position:relative;display:block;height:16px;background:var(--surface-2);
+  border-radius:2px;min-width:70px}
+.cellbar b{position:absolute;inset:0 auto 0 0;background:var(--mark);border-radius:2px;
+  display:block;font-size:0}
+.cellbar[data-mine="1"] b{background:var(--mark)}
+.cellbar[data-dim="1"] b{background:var(--muted)}
+
+/* ─────────────── две фасетки (показы / клики) ─────────────── */
+.facets{display:flex;flex-direction:column;gap:24px}
+.facet-h{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-2);margin-bottom:8px;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.facet-h em{font-style:normal;color:var(--muted);font-weight:400;letter-spacing:.02em;
+  text-transform:none;font-size:11.5px}
+.spark{width:100%;height:112px;display:block;overflow:visible}
+.spark .grid{stroke:var(--hair);stroke-width:1}
+.spark .axis{stroke:var(--rule);stroke-width:1}
+.spark .ln{fill:none;stroke:var(--mark);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.spark .ar{fill:var(--mark-soft)}
+.spark .dot{fill:var(--mark);stroke:var(--surface);stroke-width:2}
+.spark .hit{fill:transparent;cursor:pointer}
+.spark .hi{stroke:var(--ink);stroke-width:1;opacity:0}
+.spark.active .hi{opacity:.35}
+.spark text{font-family:var(--mono);font-size:9.5px;fill:var(--muted)}
+.spark .endlbl{font-weight:700;fill:var(--ink);font-size:11px}
+.tip{position:fixed;z-index:80;pointer-events:none;opacity:0;transition:opacity .12s;
+  background:var(--ink);color:var(--plane);font-family:var(--mono);font-size:11.5px;
+  line-height:1.5;padding:8px 11px;border-radius:4px;max-width:250px;
+  box-shadow:0 6px 20px rgba(0,0,0,.28)}
+.tip.on{opacity:1}
+.tip b{color:#fff;font-weight:700}
+:root[data-theme="dark"] .tip b{color:var(--ink)}
+
+/* ─────────────── стопка «бренд / небренд» ─────────────── */
+.stack{display:flex;height:44px;gap:2px;margin:6px 0 14px}
+.stack > div{position:relative;border-radius:2px;display:flex;align-items:center;
+  justify-content:center;overflow:hidden}
+.stack .s-brand{background:var(--muted);flex:0 0 96.3%}
+.stack .s-non{background:var(--mark);flex:1;min-width:5px}
+.stack .s-brand span{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--plane);
+  letter-spacing:.03em}
+.stack-key{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:11.5px;
+  color:var(--ink-2)}
+.stack-key i{display:inline-block;width:11px;height:11px;border-radius:2px;
+  margin-right:6px;vertical-align:-1px}
+
+/* ─────────────── воронка врачей ─────────────── */
+.funnel{display:grid;gap:2px;grid-template-columns:1fr;margin:8px 0 0}
+@media (min-width:720px){.funnel{grid-template-columns:repeat(4,1fr)}}
+.fstep{background:var(--surface-2);padding:15px 16px;position:relative}
+.fstep:first-child{border-radius:4px 4px 0 0}
+.fstep:last-child{border-radius:0 0 4px 4px}
+@media (min-width:720px){
+  .fstep:first-child{border-radius:4px 0 0 4px}
+  .fstep:last-child{border-radius:0 4px 4px 0}
+}
+.fstep .n{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.13em;
+  color:var(--muted);display:block;margin-bottom:7px}
+.fstep p{font-family:var(--mono);font-size:12.5px;line-height:1.5;margin:0;color:var(--ink-2)}
+.fstep.us{background:var(--mark-soft);box-shadow:inset 0 0 0 1px var(--mark)}
+.fstep.them{background:var(--crit-soft);box-shadow:inset 0 0 0 1px rgba(208,59,59,.35)}
+.fstep b{color:var(--ink)}
+
+/* ─────────────── карточки-списки ─────────────── */
+/* auto-fit при min 320px даёт максимум 3 колонки на 1120px и корректно
+   растягивает остаток: 5 карточек → 3+2, 2 карточки → половины */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:6px;padding:20px}
+.card h4{font-family:var(--sans);font-size:15.5px;font-weight:700;margin-bottom:8px}
+.card p{font-size:15.5px;line-height:1.58;color:var(--ink-2);margin:0}
+.card .cap{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--mark-ink);display:block;margin-bottom:11px}
+.card ul{margin:10px 0 0;padding-left:18px;font-size:15px;color:var(--ink-2);line-height:1.55}
+.card li{margin-bottom:5px}
+
+/* «уже построено» — инвентарь */
+.inv{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:6px;overflow:hidden}
+@media (min-width:700px){.inv{grid-template-columns:repeat(4,1fr)}}
+.inv div{background:var(--surface);padding:16px}
+.inv .q{font-family:var(--sans);font-size:26px;font-weight:800;letter-spacing:-.03em;
+  color:var(--mark-ink);display:block;line-height:1}
+.inv .t{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);display:block;
+  margin-top:8px;line-height:1.45}
+
+/* волны плана */
+.waves{display:flex;flex-direction:column;gap:14px}
+.wave{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--mark);
+  border-radius:0 6px 6px 0;padding:18px 20px}
+.wave-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:10px}
+.wave-h h4{font-family:var(--sans);font-size:16.5px;margin:0}
+.wave-h .when{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-left:auto}
+.wave ul{margin:0;padding-left:19px;font-size:16px;color:var(--ink-2);line-height:1.55}
+.wave li{margin-bottom:6px}
+.wave li:last-child{margin-bottom:0}
+.wave.blocked{border-left-color:var(--warn)}
+.wave.free{border-left-color:var(--good)}
+
+/* вопросы владельцу */
+.qa{background:var(--surface);border:1px solid var(--hair);border-radius:6px;
+  padding:0;overflow:hidden}
+.qa details{border-bottom:1px solid var(--hair)}
+.qa details:last-child{border-bottom:0}
+.qa summary{padding:15px 20px;cursor:pointer;font-family:var(--sans);font-size:16px;
+  font-weight:700;letter-spacing:-.01em;list-style:none;display:flex;gap:12px;
+  align-items:flex-start;transition:background .15s}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{background:var(--surface-2)}
+.qa summary:focus-visible{outline:2px solid var(--mark-ink);outline-offset:-2px}
+.qa summary::before{content:"+";font-family:var(--mono);font-size:16px;color:var(--mark);
+  flex-shrink:0;line-height:1.35;font-weight:700}
+.qa details[open] summary::before{content:"–"}
+.qa details[open] summary{background:var(--surface-2)}
+.qa .qb{padding:2px 20px 18px 44px;font-size:16px;color:var(--ink-2);line-height:1.6}
+.qa .qb p{margin-bottom:.7em}
+.qa .why{font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  border-top:1px solid var(--hair);padding-top:9px;margin-top:12px;line-height:1.55}
+
+/* сворачиваемые «подробнее» / таблицы-двойники */
+details.more{margin-top:14px}
+details.more > summary{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);cursor:pointer;padding:7px 0;
+  display:inline-flex;align-items:center;gap:7px;list-style:none}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"▸";font-size:9px;transition:transform .15s;display:inline-block}
+details.more[open] > summary::before{transform:rotate(90deg)}
+details.more > summary:hover{color:var(--ink)}
+details.more > summary:focus-visible{outline:2px solid var(--mark-ink);outline-offset:2px}
+details.more .mb{padding-top:8px}
+
+/* исследователь спроса */
+.exp-tabs{display:flex;flex-wrap:wrap;gap:1px;background:var(--hair);
+  border:1px solid var(--hair);border-radius:6px 6px 0 0;overflow:hidden}
+.exp-tabs button{flex:1 1 auto;min-width:110px;background:var(--surface);border:0;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-2);
+  padding:13px 10px;cursor:pointer;transition:background .15s,color .15s}
+.exp-tabs button:hover{background:var(--surface-2);color:var(--ink)}
+.exp-tabs button[aria-selected="true"]{background:var(--ink);color:var(--plane);font-weight:600}
+.exp-tabs button:focus-visible{outline:2px solid var(--mark-ink);outline-offset:-2px}
+.exp-body{background:var(--surface);border:1px solid var(--hair);border-top:0;
+  border-radius:0 0 6px 6px;padding:22px}
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));
+  gap:20px;margin-bottom:20px}
+.exp-grid .m .k{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;line-height:1.4}
+.exp-grid .m .v{font-family:var(--sans);font-size:26px;font-weight:800;letter-spacing:-.03em;
+  color:var(--ink);display:block;line-height:1.05}
+.exp-grid .m .v small{font-size:.55em;font-weight:700;color:var(--ink-2)}
+.exp-say{font-size:16.5px;line-height:1.6;color:var(--ink-2)}
+.exp-say strong{color:var(--ink)}
+
+/* прочее */
+.two{display:grid;grid-template-columns:1fr;gap:26px}
+@media (min-width:820px){.two{grid-template-columns:1fr 1fr;gap:40px}}
+hr.soft{border:0;border-top:1px solid var(--hair);margin:30px 0}
+.kicker{font-family:var(--sans);font-size:clamp(19px,2.3vw,25px);font-weight:800;
+  letter-spacing:-.02em;line-height:1.3;color:var(--ink);margin:0 0 .6em;text-wrap:balance}
+footer{border-top:2px solid var(--ink);padding:30px 0 56px}
+footer .note{max-width:660px}
+.srcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));
+  gap:14px;margin-top:18px}
+.srcgrid div{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);line-height:1.55;
+  padding-left:12px;border-left:2px solid var(--hair)}
+.srcgrid b{display:block;color:var(--ink);font-weight:600;margin-bottom:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brandmark">КДЛ <span>ЛораК</span> · Уфа</div>
+    <nav class="spy" aria-label="Разделы отчёта">
+      <a href="#itogi">Итоги</a>
+      <a href="#brend">Бренд</a>
+      <a href="#tri">Три строчки</a>
+      <a href="#gde">Где мы стоим</a>
+      <a href="#dolya">Доля рынка</a>
+      <a href="#dengi">Где деньги</a>
+      <a href="#vrachi">Врачи</a>
+      <a href="#roboty">Роботы</a>
+      <a href="#karta">Карты</a>
+      <a href="#dvizhki">Два движка</a>
+      <a href="#aktiv">Что построено</a>
+      <a href="#plan">Что дальше</a>
+      <a href="#voprosy">Нужно от вас</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════ ТИТУЛ ══════════════════ -->
+<section class="hero" id="top">
+  <div class="specimen">
+    <span><b>Отчёт</b> для владельца</span>
+    <span><b>Объект</b> ufa.loraklab.ru</span>
+    <span><b>Дата</b> 25 июля 2026</span>
+    <span><b>Источники</b> 5 инструментов Яндекса + Метрика + прайс</span>
+  </div>
+
+  <h1>Мы впервые увидели вашу нишу в цифрах. <em>Она выглядит иначе,</em> чем кажется изнутри.</h1>
+
+  <div class="hero-grid">
+    <div>
+      <p class="lede">Мы разобрали, как «ЛораК» выглядит в поиске Яндекса: по каким словам вас
+      находят, где вы стоите, кто стоит выше и сколько людей ищет то, что вы продаёте,
+      но до вас не доходит.</p>
+
+      <p>Хорошая новость и плохая новость — это одна и та же новость. Плохая: из поиска к вам
+      почти не приходят новые люди. Хорошая: значит, весь этот поток пока не задействован,
+      и он больше, чем нынешняя выручка с поиска.</p>
+
+      <p>Ниже — девять фактов, которые мы установили, каждый с цифрой и с расшифровкой
+      «что это значит для денег». Технические слова расшифрованы по ходу.
+      Всё, что можно было проверить, проверено — включая то, что мы проверили и <em>отбросили</em>
+      как ошибку (об этом честно, в разделе «Роботы»).</p>
+    </div>
+
+    <div>
+      <div class="tiles" role="group" aria-label="Главные цифры">
+        <div class="tile hot">
+          <span class="k">Клики из поиска Уфы от людей, которые вас уже знают</span>
+          <span class="v">96,3<small>%</small></span>
+          <span class="s">Новых клиентов поиск почти не приводит</span>
+        </div>
+        <div class="tile hot">
+          <span class="k">Все клики от «новых» людей за 12 недель</span>
+          <span class="v">144</span>
+          <span class="s">Это весь небрендовый поиск города</span>
+        </div>
+        <div class="tile warm">
+          <span class="k">Рекламных кампаний собрано и проверено Яндексом</span>
+          <span class="v">3</span>
+          <span class="s">Стоят на паузе, потрачено 0&nbsp;₽</span>
+        </div>
+        <div class="tile warm">
+          <span class="k">Задач в рабочем плане по итогам разбора</span>
+          <span class="v">43</span>
+          <span class="s">Каждая — с причиной и приоритетом</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ИТОГИ ══════════════════ -->
+<section id="itogi">
+  <div class="eyebrow">Если читать только один экран</div>
+  <div class="col">
+    <h2>Пять выводов</h2>
+  </div>
+
+  <div class="cards" style="margin-top:26px">
+    <div class="card">
+      <span class="cap">Вывод 1</span>
+      <h4>Поиск работает как справочная, а не как источник клиентов</h4>
+      <p>96 из 100 переходов — от людей, которые уже набрали слово «лорак». Они узнают адрес,
+      цену, режим работы. Новых людей поиск приводит единицы.</p>
+    </div>
+    <div class="card">
+      <span class="cap">Вывод 2</span>
+      <h4>«Первая страница Яндекса» больше ничего не значит</h4>
+      <p>Платят только первые три строчки. С 4-й по 10-ю переходов почти нет,
+      с 11-й — ноль. А мы по деньгам стоим на 12–46 местах.</p>
+    </div>
+    <div class="card">
+      <span class="cap">Вывод 3</span>
+      <h4>Спрос в нише огромный, и он проходит мимо</h4>
+      <p>Только по врачебным направлениям в регионе — больше 100 тысяч запросов в месяц.
+      Наше присутствие в них — доли процента.</p>
+    </div>
+    <div class="card">
+      <span class="cap">Вывод 4</span>
+      <h4>Вас знают втрое меньше, чем КДЛ</h4>
+      <p>По имени бренда: КДЛ — около 4 600 переходов в месяц по республике,
+      Инвитро — 2 400, «ЛораК» — 1 500. Это измеримо и это можно двигать.</p>
+    </div>
+    <div class="card">
+      <span class="cap">Вывод 5</span>
+      <h4>Один эндокринолог приносит больше, чем весь остальной «новый» поиск</h4>
+      <p>Там, где сделано правильно, работает отлично. Значит рецепт у нас уже есть —
+      он просто применён к одному врачу из тринадцати.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф1: БРЕНД ══════════════════ -->
+<section id="brend">
+  <div class="eyebrow">Показатель Ф1 · Статистика поисковых запросов, город Уфа, 12 недель</div>
+  <div class="col">
+    <h2>Из поиска приходят те, кто уже ваш клиент</h2>
+    <p>За 12 недель жители Уфы перешли на сайт из поиска Яндекса <strong>3 881 раз</strong>.
+    Разложим этот поток на две части: люди, которые искали слово «лорак» — и все остальные.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Кто именно к вам переходит</h4>
+      <div class="sub">3 881 переход · город Уфа · 1 мая — 23 июля 2026</div>
+    </div>
+    <div class="panel-b">
+      <div class="stack" role="img"
+        aria-label="Из 3881 перехода 3737 — по запросам со словом лорак, и только 144 — от людей, искавших услугу">
+        <div class="s-brand"><span>3 737 — искали «лорак»</span></div>
+        <div class="s-non"></div>
+      </div>
+      <div class="stack-key">
+        <span><i style="background:var(--muted)"></i>Уже знают вас — 96,3 %</span>
+        <span><i style="background:var(--mark)"></i>Искали услугу, а не вас — 144 перехода, 3,7 %</span>
+      </div>
+
+      <details class="more">
+        <summary>Та же картина в цифрах</summary>
+        <div class="mb tw">
+          <table>
+            <caption>Структура поиска по городу Уфа, 12 недель</caption>
+            <thead><tr><th>Что искали</th><th class="n">Запросов</th><th class="n">Показов</th>
+              <th class="n">Переходов</th><th class="n">Переходят</th></tr></thead>
+            <tbody>
+              <tr><td>«лорак» + услуга, цены, сайт</td><td class="n">127</td><td class="n">7 149</td><td class="n">3 294</td><td class="n">46,1 %</td></tr>
+              <tr><td>«лорак» + адрес, телефон, режим</td><td class="n">166</td><td class="n">2 557</td><td class="n">443</td><td class="n">17,3 %</td></tr>
+              <tr><td>Фамилии наших врачей</td><td class="n">66</td><td class="n">1 174</td><td class="n">104</td><td class="n">8,9 %</td></tr>
+              <tr><td>Адреса без слова «лорак»</td><td class="n">19</td><td class="n">129</td><td class="n">6</td><td class="n">4,7 %</td></tr>
+              <tr><td>Названия конкурентов</td><td class="n">21</td><td class="n">73</td><td class="n">0</td><td class="n">0 %</td></tr>
+              <tr><td>Прочее — услуги, «где сдать», цены</td><td class="n">109</td><td class="n">298</td><td class="n">34</td><td class="n">11 %</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>Сегодня поиск обслуживает <strong>уже существующих клиентов</strong> — им нужен адрес и
+      прайс. Это полезно, но это не рост: эти люди пришли бы и так.</p>
+      <p>Приток новых клиентов из поиска — 144 человека за три месяца, примерно <strong>полтора
+      человека в день на весь город</strong>. Именно этот канал сейчас пустой,
+      и именно его можно наполнить.</p>
+    </div>
+    <p class="note" style="margin-top:20px">Оговорка про честность цифр: 243 запроса из 508 не дали
+    ни одного перехода вообще. То есть Яндекс нас показывает — люди не нажимают. Почему —
+    в следующем разделе.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф2: ТРИ СТРОЧКИ ══════════════════ -->
+<section id="tri">
+  <div class="eyebrow">Показатель Ф2 · Расширенная аналитика по URL + статистика запросов</div>
+  <div class="col">
+    <h2>Закон трёх строчек</h2>
+    <p>Есть привычное представление: «попасть на первую страницу Яндекса» — уже успех.
+    В медицине это давно не так, и мы это измерили на своих же данных.</p>
+    <p>Над обычными результатами поиска Яндекс теперь ставит рекламу, карты, свои витрины
+    и справочные блоки. До «просто ссылок» человек часто уже не доскролливает.
+    Вот сколько людей нажимает на нашу ссылку в зависимости от места в списке:</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Из 100 человек, увидевших нашу ссылку, нажимают</h4>
+      <div class="sub">Небрендовые запросы (люди искали услугу, не «ЛораК») · Башкортостан</div>
+    </div>
+    <div class="panel-b">
+      <div class="bars" id="cliff">
+        <div class="bar-row" tabindex="0" data-tip="Места 1–3: 31 показ, 23 перехода. Три из четырёх увидевших — нажимают.">
+          <span class="bl">места 1–3</span>
+          <span class="bar-track"><span class="bar-fill" style="width:74.2%"></span></span>
+          <span class="bar-val">74<em> из 100</em></span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="Места 4–10: 285 показов, 8 переходов. Показы есть, людей нет.">
+          <span class="bl">места 4–10</span>
+          <span class="bar-track"><span class="bar-fill" style="width:2.8%"></span></span>
+          <span class="bar-val">3<em> из 100</em></span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="Места 11–20: 125 показов и ноль переходов. Ни одного.">
+          <span class="bl">места 11–20</span>
+          <span class="bar-track"><span class="bar-fill" data-zero="1" style="width:4px"></span></span>
+          <span class="bar-val">0<em> из 100</em></span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="Места 21–50: 15 показов, ноль переходов.">
+          <span class="bl">места 21–50</span>
+          <span class="bar-track"><span class="bar-fill" data-zero="1" style="width:4px"></span></span>
+          <span class="bar-val">0<em> из 100</em></span>
+        </div>
+      </div>
+      <p class="bar-note">Это не постепенный спад, а обрыв: между 3-м и 4-м местом падение в 26 раз.</p>
+
+      <details class="more">
+        <summary>Проверка на втором источнике</summary>
+        <div class="mb">
+          <p class="note">Мы измерили то же самое вторым инструментом, по городу Уфе за 12 недель —
+          картина совпала, с одним уточнением: полоса 3–5 места ещё немного платит.<br>
+          Места 1,5–3 — 27 переходов из 100 · места 3–5 — 13 из 100 · места 5–10 — <b>3,6 из 100</b>.
+          При этом <b>59 % всех наших небрендовых показов в городе стоят именно в полосе 5–10</b> —
+          то есть в зоне, которая не приносит ничего.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>Задача «поднять страницу с 43-го места на 8-е» <strong>не имеет смысла</strong> —
+      на 8-м месте денег столько же, сколько на 43-м. Ноль.</p>
+      <p>Отсюда развилка по каждой теме: либо мы реально можем взять топ-3 — и тогда работаем
+      над страницей; либо не можем — и тогда эту тему закрывает <strong>реклама</strong>,
+      которая стоит выше всей органики. Третьего варианта нет, и раньше мы этого не знали.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф3: ГДЕ МЫ СТОИМ ══════════════════ -->
+<section id="gde">
+  <div class="eyebrow">Показатель Ф3 · Сводно по всем источникам</div>
+  <div class="col">
+    <h2>Где мы стоим по самым денежным словам</h2>
+    <p>Теперь наложим предыдущее правило на реальность. Зелёная зона на шкалах ниже —
+    места 1–3, те самые, которые платят. Метка — наше фактическое среднее место.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Наше место в поиске против зоны, которая приносит клиентов</h4>
+      <div class="sub">Наведите на строку, чтобы увидеть цифры. Шкала сжата: 1–10 растянуто, 10–50 сжато</div>
+    </div>
+    <div class="panel-b" style="padding-bottom:8px">
+      <div class="filters" role="group" aria-label="Фильтр строк">
+        <button class="chip" aria-pressed="true" data-f="all">Все темы</button>
+        <button class="chip" aria-pressed="false" data-f="bad">Где нас не видно</button>
+        <button class="chip" aria-pressed="false" data-f="ok">Где мы в зоне денег</button>
+      </div>
+    </div>
+    <div class="readouts" id="ros"></div>
+    <div class="panel-f">
+      <details class="more">
+        <summary>Таблица со всеми числами</summary>
+        <div class="mb tw"><table id="ros-table">
+          <caption>Позиции и спрос по денежным темам</caption>
+          <thead><tr><th>Запрос / тема</th><th class="n">Наше место</th>
+            <th class="n">Спрос в месяц</th><th>Состояние</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>По всем деньгам мы <strong>вне зоны видимости</strong>. «Гастроэнтеролог Уфа» — 46-е место,
+      «гинеколог Уфа» — 43-е, «спермограмма» — 35-е, «терапевт Уфа» — нас там нет вовсе.
+      А посадочные страницы под эти услуги на сайте <em>уже существуют</em>.</p>
+      <p>В зоне денег мы стоим ровно в двух местах: «эндокринолог Уфа» и «УЗИ Уфа».
+      И это не совпадение — там сделано то, чего нет на остальных страницах.</p>
+    </div>
+
+    <details class="more">
+      <summary>Отдельная находка: люди ищут по кодам из направления</summary>
+      <div class="mb">
+        <p class="note">В живых запросах нашлись строки вида «a26.06.032 уфа», «в03.016.024 что это что
+        надо сдать», «птв а12.05.027». Это <b>коды услуг из бумажного направления</b>: человек
+        переписывает код в поиск. Интерес максимально горячий — направление на руках.
+        Конкуренции нет вообще: код в прайсе почти никто не публикует. Мы попадаем туда
+        случайно с 8–12 места. Одна дополнительная колонка в прайсе закрывает целый класс запросов.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф4: ДОЛЯ РЫНКА ══════════════════ -->
+<section id="dolya">
+  <div class="eyebrow">Показатель Ф4 · Подбор запросов и анализ рынка, Башкортостан</div>
+  <div class="col">
+    <h2>Насколько вас знают по сравнению с конкурентами</h2>
+    <p>Впервые получилось измерить узнаваемость в цифрах. Считается просто: сколько людей
+    в республике вводят название лаборатории и переходят на её сайт.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Переходы по названию лаборатории, в среднем за месяц</h4>
+      <div class="sub">Республика Башкортостан · данные Яндекса за прошедший год</div>
+    </div>
+    <div class="panel-b">
+      <div class="bars">
+        <div class="bar-row" tabindex="0" data-tip="КДЛ: «кдл» 1984 + «кдл уфа» 1008 + официальный сайт 457 + Стерлитамак 536 + Салават 245 и далее">
+          <span class="bl">КДЛ</span>
+          <span class="bar-track"><span class="bar-fill" style="width:84%;background:var(--muted)"></span></span>
+          <span class="bar-val">≈ 4 600</span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="Инвитро: «инвитро» 981 + «инвитро уфа» 699 + цены 206 + города республики">
+          <span class="bl">Инвитро</span>
+          <span class="bar-track"><span class="bar-fill" style="width:43.8%;background:var(--muted)"></span></span>
+          <span class="bar-val">≈ 2 400</span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="ЛораК: «лорак уфа» 768 + официальный сайт 317 + «лорак анализы» 134 + цены 139 + адреса 51">
+          <span class="bl">ЛораК</span>
+          <span class="bar-track"><span class="bar-fill" style="width:27.4%"></span></span>
+          <span class="bar-val">≈ 1 500</span>
+        </div>
+      </div>
+      <p class="bar-note">Серым — конкуренты, цветом — мы.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>Разрыв не катастрофический — это <strong>третье место на рынке, а не последнее</strong>,
+      и КДЛ впереди втрое, а не в тридцать раз. Но важнее другое: теперь у нас есть <em>линейка</em>.
+      Мы будем снимать это число каждый месяц, и по нему станет видно, растёт узнаваемость
+      от нашей работы или нет.</p>
+      <p>Отдельно: почти половина спроса на слово «лорак» в республике — это <strong>певица
+      Ани Лорак</strong> («ани лорак» 423 перехода, «ани лорак песни» 257). В рекламе эти слова
+      уже отсечены, иначе вы платили бы за клики её поклонников.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф5: ГДЕ ДЕНЬГИ ══════════════════ -->
+<section id="dengi">
+  <div class="eyebrow">Показатель Ф5 · Спрос региона против нашего ассортимента</div>
+  <div class="col">
+    <h2>Где в нише лежат деньги</h2>
+    <p>Мы посмотрели не только «сколько людей ищет», но и <strong>сколько из них вообще
+    переходит на сайты</strong>. Это разные вещи: по некоторым темам человек получает ответ
+    прямо в поиске и никуда не идёт — такой спрос бесполезен. А по некоторым уходит
+    искать, где сделать, — вот там деньги.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Выберите направление</h4>
+      <div class="sub">Цифры — реальный спрос региона и ваш прайс. Это размер рынка, а не прогноз выручки</div>
+    </div>
+    <div style="padding:0">
+      <div class="exp-tabs" role="tablist" aria-label="Направления"></div>
+      <div class="exp-body" id="exp-body" role="tabpanel"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>Самая кликабельная тема региона — УЗИ, и мы к ней не готовы</h3>
+    <p>Люди ищут не «УЗИ Уфа», а конкретный вид: брюшная полость, малый таз, молочные железы,
+    щитовидная. И по видам они <strong>реально уходят из поиска на сайты</strong> — до 71 человека
+    из 100. По общему слову «УЗИ Уфа» — только 35.</p>
+    <p>В вашем прайсе <strong>14 видов УЗИ</strong>. На странице «УЗИ» на сайте описано
+    <strong>два</strong>. Вести рекламу «УЗИ щитовидной железы» на страницу, где про щитовидную
+    железу ни слова, — это заплатить за клик и потерять человека.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Кликабельность по видам УЗИ и наша готовность</h4>
+      <div class="sub">Из 100 человек, искавших этот вид, ушли на какой-нибудь сайт · Башкортостан</div>
+    </div>
+    <div class="panel-b tw">
+      <table>
+        <thead><tr><th>Вид УЗИ</th><th class="n">Уходят на сайты</th><th style="width:34%">Наглядно</th>
+          <th class="n">Ваша цена</th><th>Есть посадочная?</th></tr></thead>
+        <tbody>
+          <tr><td>Малый таз</td><td class="n">71 из 100</td>
+            <td><span class="cellbar"><b style="width:71%"></b></span></td>
+            <td class="n">1 300–1 800 ₽</td>
+            <td><span class="flag flag-crit"><i>✕</i>нет</span></td></tr>
+          <tr><td>Вены нижних конечностей</td><td class="n">68 из 100</td>
+            <td><span class="cellbar"><b style="width:68%"></b></span></td>
+            <td class="n">услуги нет</td>
+            <td><span class="flag flag-warn"><i>?</i>решение бизнеса</span></td></tr>
+          <tr><td>Молочные железы</td><td class="n">67 из 100</td>
+            <td><span class="cellbar"><b style="width:67%"></b></span></td>
+            <td class="n">1 600 ₽</td>
+            <td><span class="flag flag-crit"><i>✕</i>нет</span></td></tr>
+          <tr><td>Брюшная полость</td><td class="n">64 из 100</td>
+            <td><span class="cellbar"><b style="width:64%"></b></span></td>
+            <td class="n">1 400 ₽</td>
+            <td><span class="flag flag-warn"><i>!</i>частично</span></td></tr>
+          <tr><td>Щитовидная железа</td><td class="n">62 из 100</td>
+            <td><span class="cellbar"><b style="width:62%"></b></span></td>
+            <td class="n">1 600 ₽</td>
+            <td><span class="flag flag-crit"><i>✕</i>нет</span></td></tr>
+          <tr><td>Общее «УЗИ Уфа»</td><td class="n">35 из 100</td>
+            <td><span class="cellbar" data-dim="1"><b style="width:35%"></b></span></td>
+            <td class="n">—</td>
+            <td><span class="flag flag-good"><i>✓</i>есть</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>Самый кликабельный спрос региона упирается в страницу, которой фактически нет.
+      Это <strong>не задача рекламы</strong> — рекламу некуда вести. Сначала страницы под виды УЗИ
+      с ценами и врачами, потом реклама. Иначе бюджет уйдёт в пустоту.</p>
+    </div>
+
+    <hr class="soft">
+
+    <h3>Три находки, где спрос есть, а нас нет вообще</h3>
+  </div>
+
+  <div class="cards" style="margin-top:20px">
+      <div class="card">
+        <span class="cap">Спермограмма</span>
+        <h4>Лучшее соотношение из всего разбора</h4>
+        <p>76 человек из 100 уходят из поиска на сайты — это максимум по региону.
+        Услуга у вас <strong>есть</strong>, 1 000 ₽, результат за 6–8 часов.
+        Наше место в поиске — <strong>35-е</strong>.</p>
+      </div>
+      <div class="card">
+        <span class="cap">Ферритин</span>
+        <h4>9 384 запроса в месяц, посадочной нет</h4>
+        <p>Крупнейшая находка по объёму. Панель с ферритином в прайсе есть — 1 300 ₽,
+        а отдельной страницы нет, «ферритин» ведёт в общий прайс. Рядом тема
+        «как поднять ферритин»: 227 переходов в месяц и <strong>низкая конкуренция</strong> —
+        единственная такая в разборе. Местных сайтов в теме нет вообще.</p>
+      </div>
+      <div class="card">
+        <span class="cap">ДНК-отцовство</span>
+        <h4>Самая высокая маржа на один клик</h4>
+        <p>Спрос небольшой — 300–500 запросов в месяц, но чек <strong>10 500 и 15 500 ₽</strong>.
+        Здесь окупается даже дорогой клик. В органике нас по этой теме нет
+        совсем — то есть реклама тут единственный канал.</p>
+      </div>
+    </div>
+</section>
+
+<!-- ══════════════════ Ф6: ВРАЧИ ══════════════════ -->
+<section id="vrachi">
+  <div class="eyebrow">Показатель Ф6 · Мониторинг запросов + аналитика ассортимента</div>
+  <div class="col">
+    <h2>Врачи — единственное, что у нас работает. И работает отлично</h2>
+    <p>Среди всего «нового» поиска есть один сегмент, который растёт третий квартал подряд
+    и по кликабельности не уступает бренду: <strong>страницы врачей</strong>.</p>
+    <p>Один эндокринолог, Малиевский, за полгода принёс <strong>295 переходов</strong> —
+    больше, чем весь остальной небрендовый поиск вместе. Страница Максютовой даёт
+    <strong>49 переходов из 100 показов</strong> — это уровень брендового запроса.</p>
+    <p>Но вот как эти люди к нам попадают:</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Путь человека, который ищет врача</h4>
+      <div class="sub">Восстановлено по позициям и запросам</div>
+    </div>
+    <div class="panel-b">
+      <div class="funnel">
+        <div class="fstep">
+          <span class="n">ШАГ 1</span>
+          <p>Человек ищет <b>«эндокринолог Уфа»</b> — 2 036 таких запросов в месяц</p>
+        </div>
+        <div class="fstep them">
+          <span class="n">ШАГ 2 · НАС ЗДЕСЬ НЕТ</span>
+          <p>Попадает к справочникам — <b>ПроДокторов, НаПоправку, DocDoc</b>. Наша страница
+          специальности — на 20–46 месте</p>
+        </div>
+        <div class="fstep them">
+          <span class="n">ШАГ 3 · ВЫБОР ИДЁТ ТАМ</span>
+          <p>Читает отзывы <b>на чужом сайте</b>, выбирает конкретного врача</p>
+        </div>
+        <div class="fstep us">
+          <span class="n">ШАГ 4 · ЗДЕСЬ ПОЯВЛЯЕМСЯ МЫ</span>
+          <p>Ищет фамилию отдельно — и приходит к нам. <b>Мы забираем только последний шаг</b></p>
+        </div>
+      </div>
+      <p class="bar-note" style="padding-left:0;margin-top:16px">Выбор происходит на шаге 3,
+      на чужой площадке. Мы включаемся, когда решение уже принято.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит</span>
+      <p>Рецепт, который работает, <strong>у нас уже есть и доказан</strong> — на эндокринологии.
+      Полноценная карточка врача плюс живая страница специальности дают 12–49 переходов из 100.
+      Он просто не применён к остальным.</p>
+      <p>По гастроэнтерологии, гинекологии, терапии, аллергологии, маммологии страницы
+      <em>существуют</em> и стоят на 17–46 местах. Это самая крупная незакрытая дыра
+      во всём разборе: врачебные направления — больше 100 тысяч запросов в месяц по округу,
+      наше покрытие — <strong>0,1 %</strong>.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Медицинский рынок Башкортостана: где вы есть, а где нет</h4>
+      <div class="sub">Показы карточек врачей в поиске за неделю · показано 12 крупнейших направлений из 30</div>
+    </div>
+    <div class="panel-b tw">
+      <table id="spec-table">
+        <thead><tr><th>Направление</th><th class="n">Показов за неделю</th><th style="width:26%">Доля рынка</th>
+          <th class="n">Средняя цена приёма</th><th>Наши врачи</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <details class="more">
+        <summary>Ещё 18 направлений</summary>
+        <div class="mb tw"><table id="spec-rest"><tbody></tbody></table></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>Вы представлены в <strong>5 направлениях из 30</strong>. Не закрыты первые по спросу:
+    терапевт (12 % всего медицинского поиска региона), хирург, невролог, лор.
+    По лору, кстати, самая высокая кликабельность карточек во всём срезе.</p>
+    <p>Самое обидное — <strong>УЗИ</strong>. Это второе направление региона по спросу,
+    и в вашем перечне врачей там <strong>один</strong> специалист. Для сравнения:
+    у Медси — 20, у клиники Фомина — 15, у Инвитро — 3. А справочники держат выдачу просто
+    объёмом: у НаПоправку 353 карточки УЗИ-врачей, у Доктю — 314.</p>
+    <p class="note">Обгонять справочники по объёму бессмысленно и не нужно. Смысл в том,
+    чтобы <b>закрыть свои направления полностью</b> — каждая связка «врач + клиника» это
+    отдельная бесплатная карточка в поиске Яндекса.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф7: РОБОТЫ ══════════════════ -->
+<section id="roboty">
+  <div class="eyebrow">Показатель Ф7 · Что мы проверили и отбросили</div>
+  <div class="col">
+    <h2>История про рост, которого не было</h2>
+    <p>Этот раздел — про то, как легко было ошибиться, и почему мы теперь смотрим на цифры
+    иначе. Рассказываем, потому что от этого зависело, куда пошёл бы бюджет.</p>
+    <p>С февраля 2026 сайт начал стремительно «набирать видимость»: показы в поиске выросли
+    почти вдвое. Выглядело как отличная новость. Но вот два графика рядом — сколько раз нас
+    показали и сколько раз на нас нажали:</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Показы и переходы, 18 месяцев</h4>
+      <div class="sub">Наведите на любой месяц — подсветятся оба графика</div>
+    </div>
+    <div class="panel-b">
+      <div class="facets" id="facets">
+        <div>
+          <div class="facet-h"><span>Сколько раз нас показали</span><em>рост почти вдвое</em></div>
+          <svg class="spark" id="sp-imp" viewBox="0 0 700 112" preserveAspectRatio="none"
+            role="img" aria-label="Показы выросли с 8035 в январе 2025 до 14129 в марте 2026"></svg>
+        </div>
+        <div>
+          <div class="facet-h"><span>Сколько раз на нас нажали</span><em>рост кончился в январе</em></div>
+          <svg class="spark" id="sp-clk" viewBox="0 0 700 112" preserveAspectRatio="none"
+            role="img" aria-label="Переходы выросли с 1195 до 2726 к январю 2026 и затем не росли"></svg>
+        </div>
+      </div>
+
+      <details class="more">
+        <summary>Таблица по месяцам</summary>
+        <div class="mb tw"><table id="mon-table">
+          <caption>Показы и переходы по месяцам, все регионы</caption>
+          <thead><tr><th>Месяц</th><th class="n">Показы</th><th class="n">Переходы</th><th class="n">Переходят</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>Показы вверх — переходы стоят. Мы стали разбираться и нашли причину: <strong>15 708 показов
+    за полгода при 6 переходах</strong>, все по запросам вида «клинико-диагностическая лаборатория
+    уфа», «анализы адреса уфа», «где сдать анализы уфа». Все — <strong>из Москвы</strong>.
+    В Приволжском округе у этих же запросов спрос и показы — <strong>ноль</strong>.</p>
+    <p>Профиль однозначный: до января — один показ в месяц, с февраля — ровное плато в сотни
+    показов, позиция стабильна до десятых долей, нажатий нет. Так выглядит не спрос, а
+    <strong>программа, которая автоматически проверяет позиции сайтов</strong> — чей-то
+    сеошный робот, регулярно снимающий выдачу.</p>
+
+    <div class="plain">
+      <span class="plain-h">Почему это важно для денег</span>
+      <p>На этих цифрах мы уже успели построить таблицу «упущенного спроса» и собирались вести
+      по ней рекламу. Если бы не проверили — <strong>реклама пошла бы по словам, которых
+      в Уфе никто не набирает</strong>. Расход был бы, обращений — нет, и понять почему было бы нельзя.</p>
+      <p>Вывод, ставший теперь правилом работы: цифру «показы» без разреза по региону
+      мы больше не принимаем как показатель видимости. Все выводы — только по своему региону
+      и только со сверкой спроса.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ Ф8: КАРТОЧКА ══════════════════ -->
+<section id="karta">
+  <div class="eyebrow">Показатель Ф8 · Статистика запросов, город Уфа</div>
+  <div class="col">
+    <h2>Звонки забирает карточка на Картах, а не сайт</h2>
+    <p>Мы нашли странность. Есть 166 запросов вида «лорак Бакалинская 19», «лорак телефон уфа»,
+    «лорак уфа Дёма Дагестанская телефон». По ним мы стоим на <strong>первом-втором месте</strong>.
+    И на 51 из них — <strong>ноль переходов</strong> на сайт.</p>
+    <p>Объяснение одно: адрес, телефон и часы работы человек получает <strong>прямо в поиске</strong> —
+    из карточки организации и Карт. Он не идёт на сайт, потому что ему уже всё показали.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Два вида брендовых запросов — одна и та же первая позиция</h4>
+      <div class="sub">Город Уфа · 12 недель</div>
+    </div>
+    <div class="panel-b">
+      <div class="bars">
+        <div class="bar-row" tabindex="0" data-tip="127 запросов, 7149 показов, 3294 перехода — люди идут на сайт за прайсом и услугами">
+          <span class="bl">«лорак» + услуга, цены</span>
+          <span class="bar-track"><span class="bar-fill" style="width:46.1%"></span></span>
+          <span class="bar-val">46<em> из 100</em></span>
+        </div>
+        <div class="bar-row" tabindex="0" data-tip="166 запросов, 2557 показов, 443 перехода. Позиция 1,5–2,5 — то есть дело не в позиции">
+          <span class="bl">«лорак» + адрес, телефон</span>
+          <span class="bar-track"><span class="bar-fill" style="width:17.3%"></span></span>
+          <span class="bar-val">17<em> из 100</em></span>
+        </div>
+      </div>
+      <p class="bar-note">Позиция у обеих групп одинаковая — 1,5–2,5. Разница только в том,
+      кто отвечает человеку: сайт или карточка Яндекса.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="plain">
+      <span class="plain-h">Что это значит — и это стоит звонков прямо сейчас</span>
+      <p>Ваша карточка организации в Яндексе — <strong>не картинка на карте, а основной приёмник
+      этого спроса</strong>. Всё, что в ней неверно или неполно, стоит звонков напрямую.</p>
+      <p>И там есть конкретная проблема: адрес <strong>Рихарда Зорге, 24 заведён в Яндексе дважды</strong> —
+      двумя карточками. Одна с оценкой 4,1 и 18 отзывами, вторая — 4,7 и 36 отзывами.
+      Отзывы размазаны, рейтинг занижен, а в рекламе на Картах работает только одна из карточек,
+      то есть <strong>36 отзывов не работают на вас вообще</strong>. Рейтинг и число отзывов —
+      прямой фактор того, кому позвонят.</p>
+      <p>Плюс по собственному адресу «зорге 24» сайт стоит на <strong>26-м месте</strong> —
+      человек, набравший адрес, нас не находит.</p>
+    </div>
+
+    <hr class="soft">
+
+    <h3>Ещё две вещи, которые видно только в цифрах</h3>
+    <div class="two" style="margin-top:20px">
+      <div>
+        <h4 style="font-family:var(--sans);font-size:17px;margin-bottom:10px">Страница расписания врачей — худшая на сайте</h4>
+        <p style="font-size:16px;color:var(--ink-2)">1 307 показов и <strong>7 переходов</strong>
+        за полгода. Запрос «расписание врачей уфа» — 327 показов, ноль нажатий, при этом это
+        <strong>крупнейший небрендовый запрос города</strong>. Человек хочет увидеть,
+        кто принимает и когда, а в поиске видит заголовок без единой фамилии и даты.
+        Расписание лежит в виджете, который поиск не читает.</p>
+      </div>
+      <div>
+        <h4 style="font-family:var(--sans);font-size:17px;margin-bottom:10px">53 страницы из 83 не показываются вообще</h4>
+        <p style="font-size:16px;color:var(--ink-2)">Ни одного показа за сутки: <strong>все</strong> новости,
+        <strong>все</strong> акции, почти весь блог и раздел подготовки к исследованиям.
+        Причём страницы «подготовка к УЗИ» и «подготовка к спермограмме» уже написаны —
+        и мертвы. Мы собирались заказывать статью «подготовка к УЗИ»; проверили — писать
+        не надо, надо разобраться, почему не работает существующая.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ДВА ДВИЖКА ══════════════════ -->
+<section id="dvizhki">
+  <div class="eyebrow">Как из этого делаются деньги</div>
+  <div class="col">
+    <h2>У вас два движка, а работает пока ни один</h2>
+    <p>Из всего разбора вытекает простая картина. Клиенты из интернета приходят по двум
+    независимым дорогам, и обе сейчас перекрыты — по разным причинам.</p>
+  </div>
+
+  <div class="cards" style="margin-top:28px">
+    <div class="card" style="border-left:3px solid var(--mark)">
+      <span class="cap">Движок 1 · Реклама</span>
+      <h4>Платим за клик, включается за день</h4>
+      <p>Три кампании собраны, прошли проверку Яндекса и стоят на паузе. Ориентир бюджета —
+      50 000 ₽ в месяц, старт узкий: примерно 4 500 ₽ в неделю на все три,
+      чтобы каждая набрала статистику и научилась.</p>
+      <ul>
+        <li>Реклама стоит <strong>выше всей органики</strong> — значит закрывает темы, где топ-3 нам не взять</li>
+        <li>Работает сразу, результат виден в первую неделю</li>
+        <li>Перестал платить — поток кончился</li>
+        <li>Упирается в посадочные страницы: вести рекламу некуда, если страницы нет</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:3px solid var(--good)">
+      <span class="cap">Движок 2 · Бесплатный поиск</span>
+      <h4>Бюджета не требует вообще, включается месяцами</h4>
+      <p>Карточки врачей, страницы направлений, страницы филиалов, карточка на Картах,
+      перечень врачей для Яндекса. Всё это приводит людей <strong>бесплатно</strong>,
+      и мы точно знаем, что у нас это работает — на эндокринологии.</p>
+      <ul>
+        <li>Не требует рекламного бюджета <em>ни рубля</em></li>
+        <li>Один раз сделал — работает годами</li>
+        <li>Медленно: месяцы, не дни</li>
+        <li>Сейчас перекрыт полностью: 0 показов в витринах Яндекса за 18 месяцев</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col" style="margin-top:30px">
+    <p class="kicker">Второй движок — тот, про который обычно не думают, потому что он не в счетах
+    за рекламу. При этом именно он у вас сейчас даёт весь бесплатный поток, и именно он
+    самый недоиспользованный.</p>
+    <p>Пример на цифрах, чтобы было не абстрактно: страница про справку для налогового вычета
+    приносит <strong>299 переходов</strong> за полгода — и главный запрос там
+    <strong>«меги справка для налоговой»</strong>. То есть вы бесплатно снимаете
+    трафик конкурента. Одна нормально сделанная страница.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-h">
+      <h4>Сколько людей ищет то, что вы продаёте — и сколько из них вас видит</h4>
+      <div class="sub">Спрос — Wordstat и данные Яндекса по региону. Это размер рынка, не обещание выручки</div>
+    </div>
+    <div class="panel-b tw">
+      <table>
+        <thead><tr><th>Направление</th><th class="n">Ищут в месяц</th><th class="n">Ваш чек</th>
+          <th class="n">Наше место</th><th>Что мешает</th></tr></thead>
+        <tbody>
+          <tr><td>Врачебные консультации <span class="note">(округ)</span></td><td class="n">121 420</td>
+            <td class="n">1 500–4 000 ₽</td><td class="n">17–46</td><td>страницы не доведены</td></tr>
+          <tr><td>УЗИ, все виды</td><td class="n">≈ 9 800</td><td class="n">800–3 100 ₽</td>
+            <td class="n">нет по видам</td><td>нет посадочных под виды</td></tr>
+          <tr><td>Ферритин и железодефицит</td><td class="n">9 384</td><td class="n">1 300 ₽</td>
+            <td class="n">12</td><td>нет посадочной</td></tr>
+          <tr><td>Анализы, горячее ядро</td><td class="n">≈ 2 900</td><td class="n">2 000–4 000 ₽</td>
+            <td class="n">4–16</td><td>служебный текст в прайсе</td></tr>
+          <tr><td>Спермограмма</td><td class="n">1 875</td><td class="n">1 000 ₽</td>
+            <td class="n">35</td><td>посадочная не проверена</td></tr>
+          <tr><td>Фемофлор / Андрофлор</td><td class="n">≈ 2 200</td><td class="n">1 000–3 500 ₽</td>
+            <td class="n">8–12</td><td>тема в блоге, не в услугах</td></tr>
+          <tr><td>ДНК-отцовство</td><td class="n">300–500</td><td class="n">10 500–15 500 ₽</td>
+            <td class="n">органики нет</td><td>только реклама</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-f">
+      <p class="note">Как читать: «ищут в месяц» — это потолок рынка по каждой теме, а не прогноз
+      обращений. Сколько из этого превратится в клиентов — зависит от места в поиске,
+      посадочной страницы и цены. Мы намеренно не пишем здесь выдуманных сумм выручки;
+      реальная цифра появится после первых недель работы рекламы, из фактических данных.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ АКТИВ ══════════════════ -->
+<section id="aktiv">
+  <div class="eyebrow">Что сделано и что теперь есть у бизнеса</div>
+  <div class="col">
+    <h2>Это уже построено и остаётся вашим</h2>
+    <p>Работа шла не только «посмотреть отчёты». Собран рабочий контур, который будет
+    приносить данные и дальше, без повторной раскопки с нуля.</p>
+  </div>
+
+  <div class="inv" style="margin-top:26px">
+    <div><span class="q">3</span><span class="t">рекламные кампании собраны, прошли модерацию «Медицина», стоят на паузе — потрачено 0 ₽</span></div>
+    <div><span class="q">19</span><span class="t">групп объявлений, включая все 13 филиалов на Картах с показом ближайшего</span></div>
+    <div><span class="q">5</span><span class="t">инструментов Яндекса освоено и поставлено на автоматический съём</span></div>
+    <div><span class="q">7</span><span class="t">регулярных проверок работают по расписанию сами</span></div>
+    <div><span class="q">187</span><span class="t">рекламных фраз на постоянном контроле в Вебмастере — видно, по каким мы в топе</span></div>
+    <div><span class="q">18</span><span class="t">дефектов сайта найдено и описано для разработчиков — с цифрами, чего каждый стоит</span></div>
+    <div><span class="q">43</span><span class="t">задачи в рабочем плане с приоритетами и зависимостями</span></div>
+    <div><span class="q">14</span><span class="t">точек Уфы подтверждено, медлицензии добыты, реквизиты для рекламы медуслуг готовы</span></div>
+  </div>
+
+  <div class="col" style="margin-top:34px">
+    <h3>Одна вещь, о которой стоит знать отдельно</h3>
+    <p>Самый ценный из пяти инструментов Яндекса хранит историю всего <strong>три месяца
+    скользящим окном</strong>. Данные до мая 2026 уже утеряны безвозвратно — их не купить
+    и не восстановить.</p>
+    <p>Поэтому съём этих данных поставлен на ежедневное расписание: каждый день выбирается
+    вся дневная бесплатная квота, и накапливается ваш собственный архив.
+    <strong>Каждый месяц без съёма — это месяц истории, которого больше не будет.</strong>
+    Через полгода такой архив станет тем, чего у конкурентов просто нет: они начнут
+    смотреть свои цифры с нуля, а мы будем видеть динамику за два года.</p>
+    <p class="note">Отдельно проверено и посчитано: у Яндекса есть платный доступ, который отдал бы
+    весь архив разом — <b>30 000 ₽ за месяц подписки</b>. При рекламном бюджете 50 000 ₽/мес
+    это не окупается: то же самое накапливается бесплатно за три недели.
+    <b>Рекомендация — не брать</b>, но решение денежное, поэтому вынесено вам.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ ПЛАН ══════════════════ -->
+<section id="plan">
+  <div class="eyebrow">Что дальше · 43 задачи, сгруппированные по волнам</div>
+  <div class="col">
+    <h2>Порядок работ</h2>
+    <p>Порядок не произвольный: часть задач можно делать хоть сегодня, часть упирается
+    в страницы сайта, часть — в ваше решение. Ниже — по этим трём группам.</p>
+  </div>
+
+  <div class="waves" style="margin-top:26px">
+    <div class="wave free">
+      <div class="wave-h"><h4>Делаем сразу, ничего не ждём</h4><span class="when">эта неделя</span></div>
+      <ul>
+        <li>Пересобрать слова первой кампании на настоящих данных региона, а не на показах роботов</li>
+        <li>Залить блок новых отсечек: телепередача «ДНК» на НТВ, игра Clash Royale в слове «клещ»,
+          лекарства в словах «витамин Д» и «аллергия», кино в слове «кровь», города республики,
+          где у вас нет пунктов</li>
+        <li>Проверить, что все три кампании нацелены на <strong>город Уфа</strong>, а не на республику:
+          по кликам Нефтекамск обгоняет Уфу, и при республиканском таргете вы платили бы
+          за города, где вас нет</li>
+        <li>Добавить в кампанию длинный хвост номенклатуры: ферритин, тромбоциты по Фонио,
+          ХГЧ, ТТГ, гормоны, ИППП, аллергены — подтверждены живыми запросами и не покрыты</li>
+        <li>Заложить понижение ставок на выходные: спрос в субботу-воскресенье ровно вдвое ниже буднего</li>
+      </ul>
+    </div>
+
+    <div class="wave">
+      <div class="wave-h"><h4>Ждём правок на сайте — передано разработчикам</h4><span class="when">после правок</span></div>
+      <ul>
+        <li>Убрать из прайса служебную строку <strong>«НЕ ВЫБИРАТЬ!»</strong> — это посадочная
+          страница первой кампании, и рекламу нельзя включать, пока она там</li>
+        <li>Страницы под виды УЗИ с ценами и врачами — самый кликабельный спрос региона</li>
+        <li>Посадочная под ферритин</li>
+        <li>Сделать расписание врачей читаемым для поиска: фамилии, специальности и даты
+          в тексте страницы, а не только в виджете</li>
+        <li>Довести страницы направлений до вида, который уже доказан на эндокринологии</li>
+        <li>Настроить отслеживание заявок: сейчас <strong>запись к врачу для рекламы невидима</strong> —
+          цель в Метрике сломана и полгода не срабатывала ни разу. Без этого реклама учится
+          на шуме, а не на реальных обращениях</li>
+        <li>Страницы филиалов по районам вместо одного общего списка адресов</li>
+        <li>Развести главную и прайс: за сутки нашлось 28 запросов, где они конкурируют
+          друг с другом, причём выше стоит главная, а нажимают лучше прайс</li>
+      </ul>
+    </div>
+
+    <div class="wave blocked">
+      <div class="wave-h"><h4>Ждём вашего решения</h4><span class="when">см. следующий раздел</span></div>
+      <ul>
+        <li>Какое направление главное по деньгам — от этого зависит, куда пойдёт стартовый бюджет</li>
+        <li>Сколько для вас стоит запись, заявка, звонок — без этого реклама не знает,
+          что оптимизировать</li>
+        <li>Куда есть запас приёма, а где очередь: реклама на забитую запись жжёт бюджет
+          и портит отзывы</li>
+        <li>Каких врачей вы реально принимаете — от этого зависит и перечень для Яндекса,
+          и структура кампаний</li>
+        <li>Заводим ли УЗИ вен ног и НИПТ — по региону это денежные направления,
+          которых у вас нет</li>
+        <li>Единый телефон в карточках на Картах — иначе звонки с рекламы невозможно свести
+          в одну точку учёта</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ВОПРОСЫ ══════════════════ -->
+<section id="voprosy">
+  <div class="eyebrow">Что нужно от вас · разверните любой вопрос</div>
+  <div class="col">
+    <h2>Восемь вопросов, на которые может ответить только вы</h2>
+    <p>Всё, что можно было выяснить самостоятельно — из кабинета, прайса, сайта, реестров, —
+    мы выяснили сами и вас не беспокоим. Здесь остались только те вещи, которые
+    в цифрах не лежат: бизнес-решения, экономика и то, что происходит в лаборатории офлайн.</p>
+    <p class="note">Каждый вопрос — с пояснением, почему он влияет на деньги, и с рекомендацией,
+    где она у нас есть.</p>
+  </div>
+
+  <div class="qa" style="margin-top:26px">
+    <details>
+      <summary>Какое направление вы считаете главным по деньгам?</summary>
+      <div class="qb">
+        <p>Наш расчёт по марже на один клик: ДНК-отцовство → УЗИ → горячее ядро «сдать анализы» →
+        фемофлор, витамины, спермограмма → длинный хвост номенклатуры. Прорабатываем всё,
+        но при бюджете 50 000 ₽ жать надо вокруг одного приоритета.</p>
+        <p>Наше мнение — <strong>анализы</strong>: самый предсказуемый поток обращений.
+        Но это ваша ставка, не наша.</p>
+        <div class="why">Влияет на: распределение стартового бюджета между тремя кампаниями</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Сколько для вас стоит запись, заявка, вопрос, звонок?</summary>
+      <div class="qb">
+        <p>Реклама Яндекса учится на конверсиях и распределяет бюджет туда, где их больше.
+        Чтобы она понимала, что запись к врачу ценнее клика по телефону, каждому действию
+        нужна цена. Сейчас всем пяти проставлено по 1 000 ₽ — это заглушка, означающая
+        «любое обращение одинаково ценно».</p>
+        <p>Нужны хотя бы прикидки: сколько в среднем оставляет клиент, записавшийся онлайн,
+        и какая доля позвонивших доходит до кассы. Правка обратимая, на обучение не влияет.</p>
+        <div class="why">Влияет на: то, за какие обращения реклама будет платить дороже</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Где есть свободный запас приёма, а где очередь?</summary>
+      <div class="qb">
+        <p>Единственное, что мы не можем проверить сами, а ошибка дорогая. Реклама на забитую
+        запись жжёт бюджет и портит отзывы; реклама на услугу, которой фактически нет, —
+        просто слив денег.</p>
+        <p>Особенно интересует УЗИ (сейчас 3 врача на 2 адресах) и ДНК-тест —
+        нет ли ограничений по срокам.</p>
+        <div class="why">Влияет на: какие направления включать, а какие придержать</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Каких врачей вы реально принимаете — и почему в перечне для Яндекса только 13?</summary>
+      <div class="qb">
+        <p>В файле, который читает Яндекс, 13 врачей на 5 специальностей. По данным Яндекса
+        вы не представлены в первых по спросу направлениях региона: терапевт (12 % всего
+        медицинского поиска), хирург (9 %), невролог (7,6 %), лор (6,7 % и лучшая кликабельность
+        из всех). И самое болезненное — <strong>УЗИ</strong>: второе направление региона,
+        а у вас там один врач в перечне.</p>
+        <p>Вопрос: этих врачей нет физически — или они есть, но не попали в перечень и на сайт?
+        Второй вариант означает, что вы <strong>бесплатно теряете карточки в поиске</strong>.</p>
+        <div class="why">Влияет на: бесплатный поток из витрин Яндекса и структуру кампаний</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Цены приёма ниже рынка на 18–39 % — это позиция или прайс не пересматривался?</summary>
+      <div class="qb">
+        <p>Яндекс отдаёт медианную цену приёма по региону, и мы сверили с вашей:
+        гинекологи 1 500–2 000 ₽ при медиане <strong>2 440</strong>, кардиолог 1 800 при
+        <strong>2 200</strong>, эндокринологи 2 000 при <strong>2 500</strong>.
+        Из ряда выбиваются двое: Саубанова 3 000 (+25 %) и Малиевский 4 000 (+60 %).</p>
+        <p>Держите низкую цену осознанно как вход в воронку — приём, а потом анализы у вас?
+        Или прайс давно не смотрели? От ответа зависит, что писать в объявлениях: «дешевле»
+        или «сильный врач».</p>
+        <div class="why">Влияет на: тексты объявлений и позиционирование</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Заводим ли УЗИ вен ног и НИПТ?</summary>
+      <div class="qb">
+        <p><strong>УЗИ вен нижних конечностей</strong> — второй по кликам УЗИ-запрос республики:
+        273 запроса и 186 переходов в месяц, 68 из 100 человек уходят на сайты. У вас из
+        сосудистого только дуплекс сосудов шеи, вены ног сейчас в отсечках как чужая услуга.
+        Нужен аппарат с допплером и врач, умеющий сосуды. По данным региона это
+        <strong>самое денежное расширение УЗИ</strong>.</p>
+        <p><strong>НИПТ и генетический тест на происхождение</strong> — спрос маленький,
+        но кликают почти стопроцентно, а чек высокий. Конкуренты — федеральные
+        генетические лаборатории, они уже в топе.</p>
+        <p>Если не заводим — слова остаются в отсечках, и вопрос закрыт навсегда.
+        Если заводим — это отдельные страницы и группы объявлений.</p>
+        <div class="why">Влияет на: расширение ассортимента и отсечки в рекламе</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Есть ли срочные анализы, и за какой срок готов результат?</summary>
+      <div class="qb">
+        <p>В первой кампании есть группа под запросы «анализы срочно», «быстро», «за час» —
+        196 запросов в месяц. Слова заведены, но <strong>никаких обещаний срочности
+        в объявлениях нет</strong>: ни в прайсе, ни в собранных материалах не подтверждено,
+        что услуга существует.</p>
+        <p>Если срочные анализы есть и срок известен — это сильный заголовок и отдельное
+        преимущество. Если нет — группу лучше выключить до старта, чтобы не платить
+        за клики, которые упрутся в обычные сроки.</p>
+        <div class="why">Влияет на: включать или выключить группу объявлений перед стартом</div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Рекламируемся ли по названиям конкурентов?</summary>
+      <div class="qb">
+        <p>За 17 дней страница прайса получила <strong>91 показ и ноль переходов</strong>
+        по 72 запросам с чужим названием: «кдл уфа официальный сайт цены»,
+        «инвитро экг с расшифровкой цена», «меги уфа анализ на рахит».
+        Мы в этой выдаче видимы и не забираем ни клика — органикой это не лечится,
+        рекламой берётся.</p>
+        <p>Юридически: чужой товарный знак <strong>как ключевое слово</strong> допустим,
+        <strong>в тексте объявления — нет</strong>. Риск — ответная реакция конкурента
+        и рост ставок в аукционе.</p>
+        <div class="why">Влияет на: отдельный сегмент трафика с горячим ценовым интересом</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="col" style="margin-top:30px">
+    <p>Плюс два быстрых: единый телефон во всех карточках на Картах (иначе звонки
+    с рекламы не сводятся в одну точку учёта) и склейка двойной карточки на Зорге, 24 —
+    оба пункта требуют вашего доступа в Яндекс Бизнес.</p>
+    <p class="note">Всё остальное — тексты, слова, отсечки, ставки, структура кампаний,
+    сбор данных, контроль позиций — на нашей стороне и вашего участия не требует.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ ФИНАЛ ══════════════════ -->
+<section id="final">
+  <div class="eyebrow">Вместо заключения</div>
+  <div class="col">
+    <h2>Почему это направление стоит внимания</h2>
+    <p>Три месяца назад про поиск в этой нише не было известно ничего конкретного —
+    ни где мы стоим, ни где деньги, ни кто впереди. Сейчас есть измеренная картина, и она
+    складывается в один вывод.</p>
+    <p class="kicker">Спрос в нише огромный, он оцифрован, конкуренты не идеальны — и почти
+    ничего из этого пока не задействовано.</p>
+    <p>Сеть из 14 точек, полный прайс, врачи, работающая лаборатория с 2010 года —
+    и <strong>полтора новых человека в день из поиска на весь город</strong>. Разрыв между тем,
+    что есть в бизнесе, и тем, что видно в интернете, — это и есть незанятое место.
+    Причём занять его мешают не конкуренты: справочники и КДЛ впереди не потому, что сильнее,
+    а потому что у них сделано то, что у нас пока нет.</p>
+    <p>Самое важное — это <strong>не разовая настройка</strong>. Данные, на которых стоят все
+    выводы выше, живут три месяца и утекают. Позиции меняются каждую неделю. Реклама,
+    включённая и оставленная без присмотра, за месяц уходит в мусорные запросы.
+    А второй движок — бесплатный поиск — вообще складывается только из регулярной работы:
+    страница за страницей, врач за врачом, месяц за месяцем.</p>
+    <p>Поэтому дальше правильно смотреть на это как на <strong>постоянную функцию</strong>,
+    у которой есть накопительный эффект: архив данных, который нельзя купить,
+    страницы, которые работают годами, узнаваемость, которую видно в цифрах.
+    Сегодня измеримая линейка есть — узнаваемость 1 500 против 4 600 у КДЛ.
+    Через год по ней будет видно, что именно эта работа дала.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <p class="note"><b>Откуда цифры.</b> Ни одна цифра в отчёте не оценочная — все взяты из
+    инструментов и проверены. Где данные инструмента вызывали сомнения, это сказано прямо
+    в тексте (раздел «Роботы»).</p>
+  </div>
+  <div class="srcgrid">
+    <div><b>Мониторинг запросов</b>Яндекс Вебмастер · 18 месяцев истории, 1 304 запроса, разрез по округам</div>
+    <div><b>Статистика поисковых запросов</b>Яндекс Вебмастер · единственный источник с разрезом до города Уфы · 508 запросов, 12 недель</div>
+    <div><b>Расширенная аналитика по URL</b>Яндекс Вебмастер · связка «запрос ↔ страница ↔ день ↔ регион» · 1 308 строк</div>
+    <div><b>Подбор запросов и анализ рынка</b>Яндекс Вебмастер · спрос, переходы, конкурентность и доли брендов по Башкортостану</div>
+    <div><b>Аналитика трафика и ассортимента</b>Яндекс Вебмастер · 30 медицинских направлений региона, медианные цены приёма, конкуренты по числу врачей</div>
+    <div><b>Яндекс Метрика</b>Счётчик «УФА ЛораК» · 49 093 визита за 6 месяцев, все цели и обращения</div>
+    <div><b>Wordstat</b>Частотность спроса по региону Уфа (172)</div>
+    <div><b>Прайс и сайт клиента</b>Ассортимент, цены, посадочные страницы, перечень врачей для Яндекса</div>
+  </div>
+  <p class="note" style="margin-top:26px">Отчёт от 25 июля 2026 · ufa.loraklab.ru ·
+  подготовлен по данным на 23 июля 2026 (у Яндекса данные отстают на 2 дня)</p>
+</footer>
+
+</div><!-- /wrap -->
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ─── всплывающая подсказка ─── */
+  var tip = document.getElementById('tip');
+  function showTip(html, x, y){
+    tip.innerHTML = html; tip.classList.add('on');
+    var r = tip.getBoundingClientRect();
+    var left = Math.min(Math.max(8, x - r.width/2), window.innerWidth - r.width - 8);
+    var top = y - r.height - 14; if (top < 8) top = y + 20;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  function hideTip(){ tip.classList.remove('on'); }
+
+  document.querySelectorAll('[data-tip]').forEach(function(el){
+    function at(e){
+      var r = el.getBoundingClientRect();
+      var px = (e && e.clientX) ? e.clientX : r.left + r.width/2;
+      showTip(el.getAttribute('data-tip'), px, r.top);
+    }
+    el.addEventListener('mouseenter', at);
+    el.addEventListener('mousemove', at);
+    el.addEventListener('focus', at);
+    el.addEventListener('mouseleave', hideTip);
+    el.addEventListener('blur', hideTip);
+  });
+
+  /* ─── Ф3: ридауты позиций ─── */
+  var ROWS = [
+    {q:'гастроэнтеролог уфа',       pos:46.5, dem:'10 751', st:'bad',  note:'посадочная есть, но вне видимости'},
+    {q:'гинеколог уфа',             pos:43.0, dem:'1 884',  st:'bad',  note:'посадочная есть, но вне видимости'},
+    {q:'спермограмма',              pos:35.1, dem:'1 875',  st:'bad',  note:'услуга в прайсе, 1 000 ₽'},
+    {q:'ИППП / инфекции',           pos:28.4, dem:'—',      st:'bad',  note:'услуга есть, страницы нет'},
+    {q:'наш адрес «зорге 24»',      pos:26.2, dem:'—',      st:'bad',  note:'собственный адрес, страницы филиала нет'},
+    {q:'аллергены',                 pos:24.0, dem:'—',      st:'bad',  note:'чек до 30 000 ₽'},
+    {q:'аллерголог уфа',            pos:20.5, dem:'759',    st:'bad',  note:'посадочная есть'},
+    {q:'узи цена',                  pos:18.3, dem:'490',    st:'bad',  note:'ведёт в общий прайс'},
+    {q:'маммолог уфа',              pos:17.5, dem:'563',    st:'bad',  note:'посадочная есть'},
+    {q:'ферритин',                  pos:11.8, dem:'9 384',  st:'bad',  note:'крупнейший спрос без посадочной'},
+    {q:'фемофлор',                  pos:12.0, dem:'1 734',  st:'bad',  note:'тема в блоге, не в услугах'},
+    {q:'тест на отцовство',         pos:11.0, dem:'1 949',  st:'bad',  note:'чек 10 500–15 500 ₽'},
+    {q:'расписание врачей уфа',     pos:6.95, dem:'327 показов', st:'warn', note:'крупнейший небренд города, 0 переходов'},
+    {q:'терапевт уфа',              pos:null, dem:'1 007',  st:'bad',  note:'показов нет вовсе, хотя страница есть'},
+    {q:'эндокринолог уфа',          pos:1.8,  dem:'2 036',  st:'good', note:'работает: 64 перехода за полгода'},
+    {q:'узи уфа',                   pos:1.7,  dem:'366',    st:'good', note:'работает, но только по общему слову'}
+  ];
+
+  /* шкала: 1–10 занимает 62 %, 10–50 — остальное */
+  var W = 100;
+  function sx(p){
+    if (p == null) return W;
+    if (p <= 10) return ((p - 1) / 9) * 62;
+    return 62 + Math.min((p - 10) / 40, 1) * 38;
+  }
+
+  var ros = document.getElementById('ros');
+  var flagText = {good:'в зоне денег', warn:'на грани', bad:'вне видимости'};
+  var flagCls  = {good:'flag-good',    warn:'flag-warn', bad:'flag-crit'};
+  var flagIcon = {good:'✓',            warn:'!',         bad:'✕'};
+
+  ROWS.forEach(function(r){
+    var el = document.createElement('div');
+    el.className = 'ro'; el.dataset.st = r.st; el.tabIndex = 0;
+    el.setAttribute('data-tip', r.note + (r.pos ? ' · среднее место ' + String(r.pos).replace('.', ',') : ' · нас не показывают'));
+
+    var band = 'left:0;width:' + sx(3).toFixed(2) + '%';
+    var mx = sx(r.pos);
+
+    el.innerHTML =
+      '<div class="ro-top">' +
+        '<span class="ro-q">' + r.q + '</span>' +
+        '<span class="flag ' + flagCls[r.st] + '"><i>' + flagIcon[r.st] + '</i>' + flagText[r.st] + '</span>' +
+        '<span class="ro-meta"><b>' +
+          (r.pos ? String(r.pos).replace('.', ',') + '-е место' : 'нас не показывают') + '</b>' +
+          (r.dem !== '—' ? 'спрос ' + r.dem + '/мес' : '') +
+        '</span>' +
+      '</div>' +
+      '<div class="scale">' +
+        '<div class="scale-band" style="' + band + '"><span class="band-lbl">платит</span></div>' +
+        '<div class="scale-axis"></div>' +
+        /* крайние подписи прижимаем к своим краям, иначе центрированный текст
+           вылезает за границу шкалы на узком экране */
+        [1,3,5,10,20,50].map(function(t){
+          var edge = t === 1 ? 'left:0;transform:none' : (t === 50 ? 'right:0;left:auto;transform:none' : '');
+          var lx = t === 50 ? 'calc(100% - 1px)' : sx(t).toFixed(2) + '%';
+          return '<div class="scale-tick" style="left:' + lx + '">' +
+                 '<i style="' + edge + '">' + t + '</i></div>';
+        }).join('') +
+        '<div class="scale-mark" data-flag="' + r.st + '" style="left:calc(' + mx.toFixed(2) + '% - 1.5px)"></div>' +
+      '</div>';
+    ros.appendChild(el);
+  });
+
+  /* фильтр ридаутов */
+  var chips = document.querySelectorAll('.filters .chip');
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){
+      chips.forEach(function(o){ o.setAttribute('aria-pressed', String(o === c)); });
+      var f = c.dataset.f;
+      ros.querySelectorAll('.ro').forEach(function(row){
+        var st = row.dataset.st;
+        var vis = f === 'all' || (f === 'bad' && (st === 'bad' || st === 'warn')) || (f === 'ok' && st === 'good');
+        row.style.display = vis ? '' : 'none';
+      });
+    });
+  });
+
+  /* таблица-двойник для Ф3 */
+  var rtb = document.querySelector('#ros-table tbody');
+  ROWS.forEach(function(r){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + r.q + '</td>' +
+      '<td class="n">' + (r.pos ? String(r.pos).replace('.', ',') : 'нет показов') + '</td>' +
+      '<td class="n">' + r.dem + '</td><td>' + r.note + '</td>';
+    rtb.appendChild(tr);
+  });
+
+  /* ─── Ф5: исследователь направлений ─── */
+  var EXP = [
+    {id:'uzi', name:'УЗИ', dem:'≈ 9 800', demL:'запросов в месяц по всем видам',
+     chk:'800–3 100', pos:'нет по видам', posL:'общее «УЗИ Уфа» — 1,7',
+     ctr:'62–71', ctrL:'из 100 уходят на сайты',
+     say:'<strong>Самый большой платёжеспособный спрос региона</strong> и самая высокая кликабельность. ' +
+         'В прайсе 14 видов, на сайте описано 2. Реклама сюда пойдёт только после посадочных под виды — ' +
+         'иначе платим за клик и теряем человека на странице, где про его исследование ничего нет. ' +
+         'Упирается ещё и в мощности: 3 врача на 2 адресах.'},
+    {id:'ferritin', name:'Ферритин', dem:'9 384', demL:'запросов в месяц, из них коммерческих ≈ 2 500',
+     chk:'1 300', pos:'12-е', posL:'посадочной нет',
+     ctr:'59', ctrL:'из 100 уходят на сайты',
+     say:'Крупнейшая находка по объёму. Панель с ферритином в прайсе есть, отдельной страницы нет. ' +
+         'Рядом — <strong>единственная в разборе тема с низкой конкуренцией</strong>: «как поднять ферритин», ' +
+         '227 переходов в месяц, и местных сайтов в ней нет вообще, только федеральные. ' +
+         'Понятная точка входа: посадочная плюс статья.'},
+    {id:'dnk', name:'ДНК-отцовство', dem:'300–500', demL:'запросов в месяц по всем формулировкам',
+     chk:'10 500–15 500', pos:'органики нет', posL:'реклама — единственный канал',
+     ctr:'57', ctrL:'из 100 уходят на сайты',
+     say:'<strong>Максимум маржи на один клик.</strong> Спрос маленький, поэтому кампания маленькая, ' +
+         'но при таком чеке окупается даже дорогой клик. Проверено: по этой теме в бесплатном ' +
+         'поиске нас нет вообще, конкуренции «своя реклама против своей органики» не будет. ' +
+         'Отдельно пришлось отсечь телепередачу «ДНК» на НТВ — 1 101 переход в месяц чистого мусора.'},
+    {id:'analizy', name:'Анализы', dem:'≈ 2 900', demL:'горячих запросов в месяц («сдать анализы», «цены», «рядом»)',
+     chk:'2 000–4 000', pos:'4–16', posL:'посадочная — прайс',
+     ctr:'26', ctrL:'из 100 уходят на сайты',
+     say:'Основной поток обращений и <strong>самая жёсткая конкуренция</strong>: Инвитро, КДЛ, Гемотест, Ситилаб. ' +
+         'Клик дорогой, поэтому входим ограниченным бюджетом и с плотными отсечками. ' +
+         'Блокер один и он мелкий: на посадочной странице торчит служебная строка «НЕ ВЫБИРАТЬ!».'},
+    {id:'spermo', name:'Спермограмма', dem:'1 875', demL:'запросов в месяц',
+     chk:'1 000', pos:'35-е', posL:'посадочная не проверена',
+     ctr:'76', ctrL:'из 100 уходят на сайты — максимум по региону',
+     say:'<strong>Лучшее соотношение из всего разбора.</strong> Услуга есть, результат за 6–8 часов, ' +
+         'спрос кликабельный как ни один другой — и мы на 35-м месте. ' +
+         'В первоначальном приоритете эта тема стояла шестой; по фактическим переходам она выше.'},
+    {id:'vrachi', name:'Врачи', dem:'121 420', demL:'запросов в месяц по округу, покрытие 0,1 %',
+     chk:'1 500–4 000', pos:'17–46', posL:'кроме эндокринологии — 1,8',
+     ctr:'—', ctrL:'выдачу держат справочники',
+     say:'<strong>Самая крупная незакрытая дыра.</strong> Страницы направлений существуют и стоят вне ' +
+         'видимости, при том что на эндокринологии тот же сайт стоит на 1,8 и собирает 64 перехода ' +
+         'за полгода. Значит дело не в сайте и не в домене, а в том, что рецепт применён к одной ' +
+         'специальности из пяти. Плюс приём — это вход в воронку: человек пришёл к врачу, анализы сдал у вас.'}
+  ];
+
+  var tabs = document.querySelector('.exp-tabs');
+  var body = document.getElementById('exp-body');
+
+  function renderExp(i){
+    var d = EXP[i];
+    body.innerHTML =
+      '<div class="exp-grid">' +
+        '<div class="m"><span class="k">Ищут в месяц</span><span class="v">' + d.dem + '</span>' +
+          '<span class="note" style="display:block;margin-top:7px">' + d.demL + '</span></div>' +
+        '<div class="m"><span class="k">Ваш чек</span><span class="v">' + d.chk + ' <small>₽</small></span>' +
+          '<span class="note" style="display:block;margin-top:7px">по вашему прайсу</span></div>' +
+        '<div class="m"><span class="k">Наше место в поиске</span><span class="v">' + d.pos + '</span>' +
+          '<span class="note" style="display:block;margin-top:7px">' + d.posL + '</span></div>' +
+        '<div class="m"><span class="k">Кликабельность темы</span><span class="v">' + d.ctr + '</span>' +
+          '<span class="note" style="display:block;margin-top:7px">' + d.ctrL + '</span></div>' +
+      '</div>' +
+      '<p class="exp-say">' + d.say + '</p>';
+  }
+
+  EXP.forEach(function(d, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = d.name; b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      tabs.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-selected','false'); });
+      b.setAttribute('aria-selected','true');
+      renderExp(i);
+    });
+    tabs.appendChild(b);
+  });
+  renderExp(0);
+
+  /* ─── Ф6: таблица направлений ─── */
+  var SPEC = [
+    ['терапевт',      37947, 12.13, '2 100', 0],
+    ['узи-специалист',28996,  9.27, '1 900', 1],
+    ['хирург',        28190,  9.01, '1 900', 0],
+    ['стоматолог',    25067,  8.01, '1 000', 0],
+    ['невролог',      23694,  7.57, '2 250', 0],
+    ['гинеколог',     22609,  7.23, '2 440', 3],
+    ['лор',           21026,  6.72, '2 350', 0],
+    ['гастроэнтеролог',17051, 5.45, '2 338', 0],
+    ['ортопед',       15829,  5.06, '2 400', 0],
+    ['дерматолог',    14765,  4.72, '2 000', 0],
+    ['травматолог',   14301,  4.57, '2 100', 0],
+    ['акушер',        12959,  4.14, '2 400', 1]
+  ];
+  var SPEC_REST = [
+    ['уролог',12756,'2 150',0],['кардиолог',12751,'2 200',1],['эндокринолог',12548,'2 500',4],
+    ['проктолог',11576,'2 000',0],['нарколог',10587,'2 000',0],['онколог',10572,'2 295',0],
+    ['офтальмолог',9667,'2 100',0],['косметолог',9368,'2 000',0],['психиатр',8888,'4 200',0],
+    ['стоматолог-хирург',8555,'1 000',0],['педиатр',7975,'2 600',0],['ревматолог',7377,'2 500',0],
+    ['стоматолог-терапевт',6948,'840',0],['андролог',6622,'2 450',0],['флеболог',6551,'1 200',0],
+    ['эндоскопист',6509,'2 850',0],['рефлексотерапевт',6282,'2 040',0],
+    ['функциональная диагностика',5714,'1 800',1]
+  ];
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  function docFlag(n){
+    if (n === 0) return '<span class="flag flag-crit"><i>✕</i>нет</span>';
+    if (n === 1) return '<span class="flag flag-warn"><i>!</i>1 врач</span>';
+    return '<span class="flag flag-good"><i>✓</i>' + n + ' врача</span>';
+  }
+  var stb = document.querySelector('#spec-table tbody');
+  SPEC.forEach(function(r){
+    var tr = document.createElement('tr');
+    if (r[4] > 0) tr.className = 'mine';
+    tr.innerHTML = '<td>' + r[0] + '</td><td class="n">' + fmt(r[1]) + '</td>' +
+      '<td><span class="cellbar"' + (r[4] ? '' : ' data-dim="1"') + '><b style="width:' +
+        (r[2] / 12.13 * 100).toFixed(1) + '%"></b></span></td>' +
+      '<td class="n">' + r[3] + ' ₽</td><td>' + docFlag(r[4]) + '</td>';
+    stb.appendChild(tr);
+  });
+  var stb2 = document.querySelector('#spec-rest tbody');
+  SPEC_REST.forEach(function(r){
+    var tr = document.createElement('tr');
+    if (r[3] > 0) tr.className = 'mine';
+    tr.innerHTML = '<td>' + r[0] + '</td><td class="n">' + fmt(r[1]) + '</td>' +
+      '<td class="n">' + r[2] + ' ₽</td><td>' + docFlag(r[3]) + '</td>';
+    stb2.appendChild(tr);
+  });
+
+  /* ─── Ф7: две фасетки ─── */
+  var MON = [
+    ['янв 2025', 8035, 1195], ['апр 2025', 6881, 1221], ['июл 2025', 6757, 1270],
+    ['окт 2025', 7969, 2469], ['янв 2026', 7772, 2726], ['фев 2026', 9535, 2685],
+    ['мар 2026',14129, 2532], ['апр 2026',13364, 2875], ['май 2026', 9859, 1944],
+    ['июн 2026',10944, 2076]
+  ];
+  var VW = 700, VH = 112, PT = 16, PB = 30, PL = 4, PR = 66;
+
+  function drawFacet(svgId, idx, max){
+    var svg = document.getElementById(svgId);
+    var n = MON.length;
+    var iw = VW - PL - PR, ih = VH - PT - PB;
+    function X(i){ return PL + (i / (n - 1)) * iw; }
+    function Y(v){ return PT + ih - (v / max) * ih; }
+
+    var parts = [];
+    /* сетка: значение верхней линии подписано слева, чтобы не спорить с концевой меткой */
+    [0, 0.5, 1].forEach(function(f){
+      var y = PT + ih - f * ih;
+      parts.push('<line class="' + (f === 0 ? 'axis' : 'grid') + '" x1="' + PL + '" y1="' + y +
+        '" x2="' + (PL + iw) + '" y2="' + y + '"/>');
+    });
+    parts.push('<text x="' + PL + '" y="' + (PT - 5) + '">' + fmt(max) + '</text>');
+    parts.push('<text x="' + PL + '" y="' + (PT + ih + 11) + '">0</text>');
+    /* область + линия */
+    var pts = MON.map(function(m, i){ return X(i).toFixed(1) + ',' + Y(m[idx]).toFixed(1); });
+    parts.push('<path class="ar" d="M' + PL + ',' + (PT + ih) + ' L' + pts.join(' L') +
+      ' L' + (PL + iw) + ',' + (PT + ih) + ' Z"/>');
+    parts.push('<path class="ln" d="M' + pts.join(' L') + '"/>');
+    /* точки + зоны наведения */
+    MON.forEach(function(m, i){
+      var x = X(i), y = Y(m[idx]);
+      parts.push('<line class="hi" data-i="' + i + '" x1="' + x.toFixed(1) + '" y1="' + PT +
+        '" x2="' + x.toFixed(1) + '" y2="' + (PT + ih) + '"/>');
+      parts.push('<circle class="dot" data-i="' + i + '" cx="' + x.toFixed(1) + '" cy="' +
+        y.toFixed(1) + '" r="3"/>');
+      parts.push('<rect class="hit" data-i="' + i + '" x="' + (x - iw / (n - 1) / 2).toFixed(1) +
+        '" y="0" width="' + (iw / (n - 1)).toFixed(1) + '" height="' + VH + '"/>');
+    });
+    /* подписи месяцев — ровно под своими точками */
+    [0, 2, 4, 6, 9].forEach(function(i){
+      var anchor = i === 0 ? 'start' : (i === 9 ? 'end' : 'middle');
+      var x = i === 0 ? PL : (i === 9 ? X(9) + 2 : X(i));
+      parts.push('<text x="' + x.toFixed(1) + '" y="' + (PT + ih + 24) +
+        '" text-anchor="' + anchor + '">' + MON[i][0] + '</text>');
+    });
+
+    /* подпись последней точки — справа от графика, в отведённом поле PR */
+    var last = MON[n - 1];
+    parts.push('<text class="endlbl" x="' + (X(n - 1) + 9).toFixed(1) + '" y="' +
+      (Y(last[idx]) + 4).toFixed(1) + '" text-anchor="start">' + fmt(last[idx]) + '</text>');
+
+    svg.innerHTML = parts.join('');
+    return svg;
+  }
+
+  var svgI = drawFacet('sp-imp', 1, 15000);
+  var svgC = drawFacet('sp-clk', 2, 3000);
+
+  function linkFacets(svg){
+    svg.querySelectorAll('.hit').forEach(function(h){
+      h.addEventListener('mouseenter', function(e){
+        var i = h.dataset.i;
+        [svgI, svgC].forEach(function(s){
+          s.classList.add('active');
+          s.querySelectorAll('.hi').forEach(function(l){ l.style.opacity = l.dataset.i === i ? '' : '0'; });
+          s.querySelectorAll('.dot').forEach(function(d){ d.setAttribute('r', d.dataset.i === i ? '5' : '3'); });
+        });
+        var m = MON[+i];
+        var pct = (m[2] / m[1] * 100).toFixed(1).replace('.', ',');
+        var r = h.getBoundingClientRect();
+        showTip('<b>' + m[0] + '</b><br>показов ' + fmt(m[1]) + '<br>переходов ' + fmt(m[2]) +
+                '<br>нажимают ' + pct + ' %', r.left + r.width / 2, r.top + 30);
+      });
+      h.addEventListener('mouseleave', function(){
+        [svgI, svgC].forEach(function(s){
+          s.classList.remove('active');
+          s.querySelectorAll('.dot').forEach(function(d){ d.setAttribute('r','3'); });
+        });
+        hideTip();
+      });
+    });
+  }
+  linkFacets(svgI); linkFacets(svgC);
+
+  /* таблица-двойник по месяцам */
+  var mtb = document.querySelector('#mon-table tbody');
+  MON.forEach(function(m){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + m[0] + '</td><td class="n">' + fmt(m[1]) + '</td><td class="n">' +
+      fmt(m[2]) + '</td><td class="n">' + (m[2] / m[1] * 100).toFixed(1).replace('.', ',') + ' %</td>';
+    mtb.appendChild(tr);
+  });
+
+  /* ─── подсветка активного раздела в шапке ─── */
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.spy a'));
+  var targets = links.map(function(a){
+    try { return document.querySelector(a.getAttribute('href')); } catch(e){ return null; }
+  });
+  function onScroll(){
+    var y = window.scrollY + 90, best = 0;
+    targets.forEach(function(t, i){ if (t && t.offsetTop <= y) best = i; });
+    links.forEach(function(a, i){
+      if (i === best) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+    });
+    var act = links[best];
+    if (act && act.parentNode.scrollWidth > act.parentNode.clientWidth){
+      var nav = act.parentNode, r = act.getBoundingClientRect(), nr = nav.getBoundingClientRect();
+      if (r.left < nr.left + 20 || r.right > nr.right - 20){
+        nav.scrollTo({ left: act.offsetLeft - nav.clientWidth / 2 + act.clientWidth / 2, behavior: 'smooth' });
+      }
+    }
+  }
+  var raf = null;
+  window.addEventListener('scroll', function(){
+    if (raf) return;
+    raf = requestAnimationFrame(function(){ onScroll(); raf = null; });
+  }, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

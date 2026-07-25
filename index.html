@@ -3,91 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Отчёты по рекламе — Хоум и Бизнес</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>КДЛ «ЛораК» — отчёты по рекламе и поиску</title>
 <style>
   :root{
-    --paper:#f6f4ef; --surface:#fff; --ink:#22272b; --ink-soft:#565d63; --ink-faint:#868d92;
-    --line:#e2ddd2; --accent:#12545c; --accent-soft:#d7e6e6;
-    --good:#2f7d54; --good-bg:#e4f0e8; --warn:#b07d1e; --warn-bg:#f5ecd6;
-    --shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);
-    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color-scheme: light;
+    --plane:#F4F6F5; --surface:#FFFFFF; --ink:#0F1A1D; --ink-2:#4B5A5E;
+    --muted:#7E8D91; --hair:#DCE4E3; --mark-ink:#00636F;
+    --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --serif:Georgia,"Noto Serif","Liberation Serif","Times New Roman",serif;
+    --mono:"Cascadia Mono",Consolas,"SF Mono",Menlo,"DejaVu Sans Mono",ui-monospace,monospace;
   }
-  @media (prefers-color-scheme:dark){:root{
-    --paper:#14171a; --surface:#1c2024; --ink:#e9e6e0; --ink-soft:#b3b8bd; --ink-faint:#838a90;
-    --line:#2f353b; --accent:#4fb4bd; --accent-soft:#123339;
-    --good:#5cbd86; --good-bg:#16301f; --warn:#d6a648; --warn-bg:#33290f;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);
-  }}
-  :root[data-theme="light"]{--paper:#f6f4ef;--surface:#fff;--ink:#22272b;--ink-soft:#565d63;--ink-faint:#868d92;--line:#e2ddd2;--accent:#12545c;--accent-soft:#d7e6e6;--good:#2f7d54;--good-bg:#e4f0e8;--warn:#b07d1e;--warn-bg:#f5ecd6;--shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);}
-  :root[data-theme="dark"]{--paper:#14171a;--surface:#1c2024;--ink:#e9e6e0;--ink-soft:#b3b8bd;--ink-faint:#838a90;--line:#2f353b;--accent:#4fb4bd;--accent-soft:#123339;--good:#5cbd86;--good-bg:#16301f;--warn:#d6a648;--warn-bg:#33290f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);}
-
+  @media (prefers-color-scheme:dark){
+    :root:where(:not([data-theme="light"])){
+      color-scheme: dark;
+      --plane:#0B1114; --surface:#141B20; --ink:#EEF3F3; --ink-2:#A7B6B9;
+      --muted:#7E8D91; --hair:#222E33; --mark-ink:#63C4CE;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --plane:#0B1114; --surface:#141B20; --ink:#EEF3F3; --ink-2:#A7B6B9;
+    --muted:#7E8D91; --hair:#222E33; --mark-ink:#63C4CE;
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:44px 22px 80px}
-  .masthead{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:8px}
-  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 12px}
-  h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.12;margin:0 0 12px;letter-spacing:-.01em}
-  .sub{font-size:14px;color:var(--ink-soft);margin:0}
-  .intro{font-size:15px;color:var(--ink-soft);margin:22px 0 24px;max-width:60ch}
-
-  .reports{display:flex;flex-direction:column;gap:14px}
-  a.card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:border-color .15s,transform .15s}
-  a.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--line)}
-  a.card.latest::before{background:var(--good)}
-  a.card:hover{border-color:var(--accent);transform:translateY(-1px)}
-  .row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-  .card h2{font-family:var(--serif);font-size:20px;margin:0;letter-spacing:-.01em}
-  .badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:100px}
-  .badge.good{background:var(--good-bg);color:var(--good)}
-  .badge.arch{background:var(--warn-bg);color:var(--warn)}
-  .date{font-size:12.5px;color:var(--ink-faint)}
-  .card p{margin:0;font-size:14px;color:var(--ink-soft)}
-  .go{margin-top:10px;font-size:13px;font-weight:700;color:var(--accent)}
-
-  .note{margin-top:26px;font-size:13px;color:var(--ink-faint);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:12px;padding:14px 16px}
-  .foot{margin-top:34px;font-size:13px;color:var(--ink-faint);text-align:center}
+  body{margin:0;background:var(--plane);color:var(--ink);font-family:var(--serif);
+    font-size:17.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:clamp(40px,8vw,88px) clamp(20px,5vw,32px) 64px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted);display:flex;align-items:baseline;
+    justify-content:space-between;flex-wrap:wrap;gap:4px 24px;
+    padding-bottom:18px;margin-bottom:26px;border-bottom:2px solid var(--ink)}
+  .eyebrow b{color:var(--ink);font-weight:600;letter-spacing:.06em}
+  h1{font-family:var(--sans);font-weight:800;letter-spacing:-.025em;line-height:1.08;
+    font-size:clamp(28px,5vw,42px);margin:0 0 20px;text-wrap:balance}
+  p{margin:0 0 1.1em;color:var(--ink-2)}
+  ul.reports{list-style:none;margin:34px 0 0;padding:0;display:flex;flex-direction:column;gap:1px;
+    background:var(--hair);border:1px solid var(--hair);border-radius:6px;overflow:hidden}
+  ul.reports li{background:var(--surface)}
+  ul.reports a{display:block;padding:20px 22px;text-decoration:none;color:inherit;
+    transition:background .15s}
+  ul.reports a:hover,ul.reports a:focus-visible{background:var(--plane)}
+  ul.reports a:focus-visible{outline:2px solid var(--mark-ink);outline-offset:-2px}
+  .d{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--mark-ink);display:block;margin-bottom:8px}
+  .t{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:-.015em;
+    display:block;margin-bottom:6px;color:var(--ink)}
+  .s{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.55;display:block}
+  footer{margin-top:44px;padding-top:22px;border-top:1px solid var(--hair);
+    font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="eyebrow"><span><b>КДЛ «ЛораК»</b> · Уфа</span><span>отчёты по рекламе и поиску</span></div>
 
-  <header class="masthead">
-    <p class="eyebrow">Управление рекламой · Яндекс Директ через LidFly</p>
-    <h1>Отчёты по рекламе двух отелей</h1>
-    <p class="sub">Хоум и Бизнес, Магнитогорск · homehotel74.ru, businesshotel74.ru</p>
-  </header>
+  <h1>Отчёты</h1>
+  <p>Здесь публикуются разборы по рекламе и поиску для сети клинико-диагностических
+  лабораторий «ЛораК». Каждый отчёт — на свою дату, старые не перезаписываются.</p>
 
-  <p class="intro">Здесь собраны все отчёты по управлению рекламой — свежий сверху. Каждый отчёт живёт по своему постоянному адресу и никуда не пропадает: новый добавляется в список, старые остаются доступными.</p>
+  <ul class="reports">
+    <li>
+      <a href="2026-07-25/">
+        <span class="d">25 июля 2026</span>
+        <span class="t">Что происходит в поиске: полный разбор ниши</span>
+        <span class="s">Девять показателей по данным пяти инструментов Яндекса, Метрики и прайса.
+        Где мы стоим по денежным словам, размер спроса, доля бренда против КДЛ и Инвитро,
+        план работ и вопросы к владельцу.</span>
+      </a>
+    </li>
+  </ul>
 
-  <div class="reports">
-
-    <a class="card latest" href="2026-07-21/">
-      <div class="row">
-        <h2>Июль 2026</h2>
-        <span class="badge good">Актуальный</span>
-        <span class="date">21 июля 2026</span>
-      </div>
-      <p>Итоги с прошлого отчёта: реклама обучилась и работает стабильно, честная картина по цене обращения, предложение по бюджету на ближайшие 1–2 месяца.</p>
-      <div class="go">Открыть отчёт →</div>
-    </a>
-
-    <a class="card" href="2026-06-02/">
-      <div class="row">
-        <h2>Июнь 2026</h2>
-        <span class="badge arch">Первый отчёт</span>
-        <span class="date">2 июня 2026</span>
-      </div>
-      <p>Стартовый отчёт: итоги глубокого аудита аккаунта, где утекает бюджет и сколько можно вернуть, план работ и вопросы к вам.</p>
-      <div class="go">Открыть отчёт →</div>
-    </a>
-
-  </div>
-
-  <p class="note">Закладку можно оставить на этой странице (<b>…/otchet/</b>) — она всегда будет показывать список с самым свежим отчётом наверху.</p>
-
-  <p class="foot">Отчётность в рамках управления рекламой через LidFly</p>
-
+  <footer>
+    Страницы закрыты от индексации поисковиками. Ссылку не размещать публично —
+    внутри коммерческие данные: цены, разбор конкурентов, слабые места сайта.
+  </footer>
 </div>
 </body>
 </html>

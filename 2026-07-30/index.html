@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Исследование: почему нас не находят в бесплатном поиске — июль 2026</title>
+</head>
+<body>
+<style>
+  :root{
+    --paper:#f6f4ef; --surface:#fff; --surface-2:#efece4; --ink:#22272b; --ink-soft:#565d63;
+    --ink-faint:#868d92; --line:#e2ddd2; --accent:#12545c; --accent-soft:#d7e6e6;
+    --good:#2f7d54; --good-bg:#e4f0e8; --warn:#b07d1e; --warn-bg:#f5ecd6; --bad:#b64a3c; --bad-bg:#f6e2de;
+    --shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#14171a; --surface:#1c2024; --surface-2:#23282d; --ink:#e9e6e0; --ink-soft:#b3b8bd;
+    --ink-faint:#838a90; --line:#2f353b; --accent:#4fb4bd; --accent-soft:#123339;
+    --good:#5cbd86; --good-bg:#16301f; --warn:#d6a648; --warn-bg:#33290f; --bad:#e0806f; --bad-bg:#35211c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="light"]{--paper:#f6f4ef;--surface:#fff;--surface-2:#efece4;--ink:#22272b;--ink-soft:#565d63;--ink-faint:#868d92;--line:#e2ddd2;--accent:#12545c;--accent-soft:#d7e6e6;--good:#2f7d54;--good-bg:#e4f0e8;--warn:#b07d1e;--warn-bg:#f5ecd6;--bad:#b64a3c;--bad-bg:#f6e2de;--shadow:0 1px 2px rgba(20,23,26,.05),0 6px 22px rgba(20,23,26,.06);}
+  :root[data-theme="dark"]{--paper:#14171a;--surface:#1c2024;--surface-2:#23282d;--ink:#e9e6e0;--ink-soft:#b3b8bd;--ink-faint:#838a90;--line:#2f353b;--accent:#4fb4bd;--accent-soft:#123339;--good:#5cbd86;--good-bg:#16301f;--warn:#d6a648;--warn-bg:#33290f;--bad:#e0806f;--bad-bg:#35211c;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 26px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;overflow-x:hidden}
+  .wrap{max-width:880px;margin:0 auto;padding:38px 22px 80px}
+  img{max-width:100%}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:0 0 12px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(27px,5vw,40px);line-height:1.12;margin:0 0 14px;text-wrap:balance;letter-spacing:-.01em}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13.5px;color:var(--ink-soft)}
+  .meta b{color:var(--ink);font-weight:600}
+
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px}
+  .toc a{font-size:12.5px;text-decoration:none;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:5px 12px}
+  .toc a:hover{color:var(--accent);border-color:var(--accent)}
+
+  section{margin-bottom:44px;scroll-margin-top:16px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--serif);font-size:23px;margin:0;letter-spacing:-.01em}
+  .sec-head .tag{font-size:13px;color:var(--ink-faint);font-style:italic}
+  .lead-in{font-size:15px;color:var(--ink-soft);margin:2px 0 20px;max-width:62ch}
+  h3.sub{font-family:var(--serif);font-size:18px;margin:26px 0 10px}
+
+  .callout{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 34%,transparent);border-radius:12px;padding:18px 20px;margin:0 0 26px}
+  .callout p{margin:0 0 10px;font-size:15.5px;color:var(--ink)}
+  .callout p:last-child{margin-bottom:0}
+
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 8px}
+  @media (max-width:620px){.cards2{grid-template-columns:1fr}}
+  .vcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .vcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}
+  .vcard.lead::before{background:var(--good)}
+  .vcard.lag::before{background:var(--warn)}
+  .vcard h3{font-family:var(--serif);font-size:20px;margin:0 0 3px}
+  .vcard .site{font-size:12.5px;color:var(--ink-faint);margin:0 0 12px}
+  .vcard p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+  .status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 10px;border-radius:100px;margin-bottom:13px}
+  .status.good{background:var(--good-bg);color:var(--good)}
+  .status.warn{background:var(--warn-bg);color:var(--warn)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 20px}
+  @media (max-width:620px){.tiles{grid-template-columns:1fr}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+  .tile .k{font-size:12.5px;color:var(--ink-faint);margin:0 0 8px;font-weight:600}
+  .tile .v{font-size:15px;color:var(--ink);font-weight:600}
+  .tile.big .v{font-size:24px;font-family:var(--serif)}
+
+  .chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 12px;box-shadow:var(--shadow);margin-bottom:16px}
+  .chart .cap{font-size:13px;font-weight:600;color:var(--ink-soft);margin:0 0 16px}
+  .cols{display:flex;align-items:flex-end;gap:10px;height:150px;padding-bottom:2px}
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .col .bar{width:100%;max-width:60px;border-radius:6px 6px 0 0;position:relative}
+  .col .barval{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px}
+  .col .lbl{font-size:11px;color:var(--ink-faint);margin-top:7px;text-align:center;line-height:1.2}
+  .bar.bad{background:var(--bad)}
+  .bar.mid{background:var(--warn)}
+  .bar.good{background:var(--good)}
+  .bar.accent{background:var(--accent)}
+
+  .metrics{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  .mrow{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;padding:13px 18px;border-top:1px solid var(--line)}
+  .mrow:first-child{border-top:none}
+  .m-name{font-size:14.5px;color:var(--ink);font-weight:600}
+  .m-name span{display:block;font-size:12.5px;color:var(--ink-faint);font-weight:400;margin-top:1px}
+  .m-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .nums{font-size:13px;color:var(--ink-soft);white-space:nowrap}
+  .nums b{color:var(--ink);font-weight:700;font-size:14.5px}
+  .chip{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap}
+  .chip.good{background:var(--good-bg);color:var(--good)}
+  .chip.warn{background:var(--warn-bg);color:var(--warn)}
+  .chip.bad{background:var(--bad-bg);color:var(--bad)}
+  .chip.flat{background:var(--surface-2);color:var(--ink-soft)}
+
+  .checks{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+  .checks li{display:flex;gap:13px;padding:15px 18px;border-top:1px solid var(--line)}
+  .checks li:first-child{border-top:none}
+  .ic{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-top:1px}
+  .ic.done{background:var(--good)} .ic.prog{background:var(--warn)} .ic.wait{background:var(--ink-faint)}
+  .checks .t{font-size:14.5px;color:var(--ink);font-weight:600}
+  .checks .d{font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+
+  .rec{display:flex;gap:16px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:13px}
+  .rec .num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--accent);line-height:1;min-width:26px}
+  .rec .body{flex:1}
+  .rec h4{margin:1px 0 7px;font-size:16.5px;font-family:var(--serif)}
+  .rec p{font-size:14px;color:var(--ink-soft);margin:0 0 6px}
+  .rec p b{color:var(--ink)}
+  .rec .why{font-size:13px;color:var(--accent);font-weight:600;margin:0}
+
+  .box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px}
+  .box.good-b{background:var(--good-bg);border-color:color-mix(in srgb,var(--good) 30%,transparent)}
+  .box.ask{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 34%,transparent)}
+  .box.bad-b{background:var(--bad-bg);border-color:color-mix(in srgb,var(--bad) 30%,transparent)}
+  .box h3{margin:0 0 10px;font-family:var(--serif);font-size:18px}
+  .box ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .box li{margin-bottom:8px}
+  .box p{margin:0 0 10px;font-size:14.5px;color:var(--ink-soft)}
+  .box p:last-child{margin-bottom:0}
+
+  .qa{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:14px;border-left:5px solid var(--warn)}
+  .qa h4{margin:0 0 8px;font-family:var(--serif);font-size:17.5px}
+  .qa p{margin:0 0 9px;font-size:14.5px;color:var(--ink-soft)}
+  .qa p b{color:var(--ink)}
+  .qa .opts{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .qa .opts li{margin-bottom:6px}
+
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);margin-bottom:18px}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+  th,td{padding:11px 14px;text-align:left;border-top:1px solid var(--line)}
+  thead th{border-top:none;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);font-weight:700}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tbody tr td:first-child{font-weight:600}
+
+  .caveats{border-top:1px solid var(--line);padding-top:22px;margin-top:10px}
+  .caveats h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);margin:0 0 12px}
+  .caveats ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .caveats li{margin-bottom:7px}
+  .foot{margin-top:36px;font-size:13px;color:var(--ink-faint);text-align:center}
+</style>
+
+<div class="wrap">
+
+  <a href="../" style="display:inline-block;font-size:13px;color:var(--accent);text-decoration:none;margin-bottom:18px">← Все отчёты</a>
+
+  <header class="masthead">
+    <p class="eyebrow">Отчёт-исследование · бесплатный поиск, рынок и конкуренты</p>
+    <h1>Почему в бесплатном поиске нас находят только по названию</h1>
+    <div class="meta">
+      <span><b>Дата:</b> 30 июля 2026</span>
+      <span><b>Что изучали:</b> два сайта, 18 месяцев истории</span>
+      <span><b>Объекты:</b> Бизнес-отель и гостевой дом «Хоум», Магнитогорск</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#glavnoe">Коротко о главном</a>
+    <a href="#chto-delali">Что и как проверяли</a>
+    <a href="#poterya">Что случилось с бесплатным поиском</a>
+    <a href="#ne-sezon">Это не сезон и не рынок</a>
+    <a href="#vydacha">Кто занял наше место</a>
+    <a href="#reklama">Хорошая новость: реклама держит удар</a>
+    <a href="#dengi">Где деньги уходят зря</a>
+    <a href="#sayty">Что с сайтами</a>
+    <a href="#besplatno">Бесплатный канал, который стоит попробовать</a>
+    <a href="#plan">Что делаем дальше</a>
+    <a href="#ot-vas">Что нужно от вас</a>
+  </nav>
+
+  <!-- ГЛАВНОЕ -->
+  <section id="glavnoe">
+    <div class="callout">
+      <p><b>Если совсем коротко.</b> Мы разобрали, откуда к вашим сайтам приходят люди из <b>бесплатного</b> поиска (то есть без рекламы). Картина такая: сейчас обоих находят почти исключительно те, кто уже знает название — «бизнес отель магнитогорск», «хоум магнитогорск». Общие запросы вроде «гостиница магнитогорск» бесплатных посетителей нам больше не приносят.</p>
+      <p><b>Главное, что мы выяснили:</b> так было не всегда. До сентября 2025 года оба сайта нормально собирали людей по общим запросам. В сентябре 2025 оба одновременно потеряли позиции — и с тех пор не вернулись. Это не сезон и не «рынок просел»: спрос в тот месяц был как раз на пике.</p>
+      <p><b>Что это значит по деньгам.</b> Бесплатный канал по общим запросам сейчас не работает, и быстро вернуть его нельзя — верх поиска занят картами и сайтами-посредниками. Зато тот же спрос уже выкупает реклама, и выкупает выгодно: самая дешёвая заявка Бизнес-отеля приходит ровно с запроса «гостиница магнитогорск» — <b>около 1 900 ₽</b> при среднем 2 760 ₽ (здесь и далее суммы с НДС, как вы их платите).</p>
+      <p><b>Что делаем:</b> убираем утечки в рекламе (примерно 4 600 ₽ в месяц уходит на показы за пределами России при одной заявке за квартал), приводим в порядок главные страницы сайтов и пробуем бесплатный блок Яндекса для номеров. По четырём вопросам нужно ваше решение — они собраны в конце.</p>
+    </div>
+
+    <div class="cards2">
+      <div class="vcard lead">
+        <span class="status good"><span class="dot"></span>Есть за что бороться</span>
+        <h3>Бизнес-отель</h3>
+        <p class="site">businesshotel74.ru</p>
+        <p>Ещё в январе 2026 собирал бесплатные переходы по общим запросам — значит сайт это умеет. К лету по тем же запросам скатился с первых мест в третий-четвёртый десяток. Реклама этот спрос закрывает, и по хорошей цене.</p>
+      </div>
+      <div class="vcard lag">
+        <span class="status warn"><span class="dot"></span>Бесплатного поиска нет</span>
+        <h3>Гостевой дом «Хоум»</h3>
+        <p class="site">homehotel74.ru</p>
+        <p>Ни в один из проверенных периодов не получил из бесплатного поиска ни одного посетителя по общим запросам — только по названию. Плюс юридическая рамка: объект не отель, а гостевой дом, и это сильно сужает, какими словами его можно продавать.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЧТО ДЕЛАЛИ -->
+  <section id="chto-delali">
+    <div class="sec-head"><h2>Что и как мы проверяли</h2><span class="tag">чтобы вы понимали вес выводов</span></div>
+    <p class="lead-in">Это не «посмотрели статистику за неделю». Мы прошли по обоим сайтам семью источниками данных и сверяли каждый вывод минимум двумя из них — то, что подтвердилось только одним, мы в этот отчёт не выносим.</p>
+
+    <div class="tiles">
+      <div class="tile big">
+        <p class="k">Глубина истории</p>
+        <p class="v">18 месяцев</p>
+        <p class="k" style="margin:6px 0 0">плюс отдельный срез за январь 2026 — сравнить зиму с летом</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Проверяемых вопросов</p>
+        <p class="v">38 → закрыто 36</p>
+        <p class="k" style="margin:6px 0 0">два оставшихся ждут запуска работ, ответа на них пока не существует</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Источники данных</p>
+        <p class="v" style="font-size:19px">7 инструментов</p>
+        <p class="k" style="margin:6px 0 0">Яндекс Вебмастер (5 разделов), рекламный кабинет, Метрика, статистика запросов, живая выдача</p>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Что именно смотрели</h3>
+      <ul>
+        <li><b>Историю бесплатного поиска за 18 месяцев</b> по обоим сайтам: сколько людей приходило, по каким запросам, на каких местах в выдаче мы стояли, из каких регионов.</li>
+        <li><b>Рынок города и области</b>: сколько людей вообще ищут гостиницу в Магнитогорске, сколько из них доходят до перехода на чей-нибудь сайт и кто эти переходы забирает.</li>
+        <li><b>Каждую страницу обоих сайтов</b> — какие приносят посетителей, какие лежат мёртвым грузом.</li>
+        <li><b>Живую выдачу Яндекса</b> — что человек видит своими глазами, когда набирает «гостиница магнитогорск» или название вашего отеля.</li>
+        <li><b>Рекламный кабинет и Метрику</b> — чтобы проверить, не закрывает ли реклама то, что потеряно в бесплатном поиске (спойлер: закрывает).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ПОТЕРЯ -->
+  <section id="poterya">
+    <div class="sec-head"><h2>Что случилось с бесплатным поиском</h2><span class="tag">главное открытие</span></div>
+    <p class="lead-in">На графиках ниже — сколько человек в месяц приходило на сайты из бесплатного поиска <b>по общим запросам</b>: «гостиница магнитогорск», «отели магнитогорск» и подобным. Переходы по названию отеля сюда не входят — это отдельная история, они как шли, так и идут.</p>
+
+    <div class="chart">
+      <p class="cap">Бизнес-отель · переходов из бесплатного поиска по общим запросам, в месяц</p>
+      <div class="cols">
+        <div class="col"><span class="barval">58</span><div class="bar good" style="height:100%"></div><span class="lbl">до августа 2025<br>включительно</span></div>
+        <div class="col"><span class="barval">14</span><div class="bar bad" style="height:24%"></div><span class="lbl">после сентября 2025</span></div>
+        <div class="col"><span class="barval">32</span><div class="bar mid" style="height:55%"></div><span class="lbl">в среднем<br>за 2026 год</span></div>
+      </div>
+    </div>
+
+    <div class="chart">
+      <p class="cap">Гостевой дом «Хоум» · переходов из бесплатного поиска по общим запросам, в месяц</p>
+      <div class="cols">
+        <div class="col"><span class="barval">38</span><div class="bar good" style="height:66%"></div><span class="lbl">до августа 2025<br>включительно</span></div>
+        <div class="col"><span class="barval">4,5</span><div class="bar bad" style="height:8%"></div><span class="lbl">после сентября 2025</span></div>
+        <div class="col"><span class="barval">1,5</span><div class="bar bad" style="height:3%"></div><span class="lbl">в среднем<br>за 2026 год</span></div>
+      </div>
+    </div>
+    <p class="lead-in" style="margin-top:2px;font-size:13px;color:var(--ink-faint)">Масштаб у обоих графиков одинаковый, столбики сравнимы между собой. За год в целом (год к году): Бизнес-отель −17% переходов из бесплатного поиска, «Хоум» −59%. Среднее место в выдаче у Бизнес-отеля ушло с 3-го на 7,6.</p>
+
+    <div class="box bad-b">
+      <h3>Почему это важнее, чем кажется</h3>
+      <p style="color:var(--ink)">Раньше мы считали, что «нас находят только по названию» — это просто свойство наших сайтов: маленькие, молодые, вот и всё. <b>Оказалось, что это не свойство, а потеря, и у неё есть дата.</b> До сентября 2025 оба сайта нормально собирали людей по общим запросам. Потом оба — независимые сайты, разные хостинги, разные тексты — в один и тот же месяц вылетели из первой пятнадцатки. Одновременность двух независимых сайтов означает внешнюю причину, а не «мы что-то сломали у себя».</p>
+      <p style="color:var(--ink)">И второе: у Бизнес-отеля волн было <b>две</b>. Мы отдельно подняли данные за январь 2026 и увидели, что тогда общие запросы у него ещё работали: «гостиница магнитогорск» стояла на первом-втором месте и приносила переходы. К июлю те же самые запросы стоят на 25–40-м месте и не приносят ничего. То есть просадка продолжается прямо сейчас, а не осталась в прошлом году.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Бизнес-отель, одни и те же общие запросы</th><th class="num">январь 2026</th><th class="num">июль 2026</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Сколько раз нас показали</td><td class="num">45</td><td class="num">45</td></tr>
+          <tr><td>Сколько человек перешло</td><td class="num">12</td><td class="num">0</td></tr>
+          <tr><td>Среднее место в выдаче</td><td class="num">1–1,5</td><td class="num">25–40</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead-in" style="margin-top:-6px;font-size:13px;color:var(--ink-faint)">Данные за одну неделю января и одну неделю июля по одним и тем же запросам. Показов поровну — разница только в том, на каком месте мы стоим.</p>
+  </section>
+
+  <!-- НЕ СЕЗОН -->
+  <section id="ne-sezon">
+    <div class="sec-head"><h2>Это не сезон и не «рынок просел»</h2></div>
+    <p class="lead-in">Первое, что приходит в голову при виде такого графика, — «наверное, сезон» или «наверное, людей стало меньше». Мы проверили обе версии отдельно, и обе не подтвердились.</p>
+
+    <div class="metrics" style="margin-bottom:18px">
+      <div class="mrow"><div class="m-name">Спрос в сентябре 2025 — том самом месяце<span>сколько людей искали гостиницу в Магнитогорске</span></div><div class="m-right"><span class="nums">1 746 против 1 503 в августе</span><span class="chip good">был на пике</span></div></div>
+      <div class="mrow"><div class="m-name">Сезонные колебания спроса в городе<span>разница между лучшим и худшим месяцем</span></div><div class="m-right"><span class="nums">×1,5</span><span class="chip flat">слабые</span></div></div>
+      <div class="mrow"><div class="m-name">Горнолыжные запросы (Абзаково, Банное) к нашим сайтам<span>проверили зимнюю неделю и летнюю, оба сайта</span></div><div class="m-right"><span class="nums"><b>0</b></span><span class="chip bad">не приходят вовсе</span></div></div>
+      <div class="mrow"><div class="m-name">Половина летних показов Бизнес-отеля<span>люди искали «гостиница магнитогорск тбанк», «88005337867»</span></div><div class="m-right"><span class="nums">42% показов, <b>0</b> переходов</span><span class="chip bad">мусор, а не спрос</span></div></div>
+    </div>
+
+    <div class="box">
+      <h3>Что здесь скрывалось</h3>
+      <p>По статистике за 2026 год казалось, что у Бизнес-отеля <b>растут показы</b>: Яндекс показывает сайт всё чаще, просто люди хуже кликают. Звучит не страшно. Мы сравнили с январём — и оказалось, что этих запросов зимой не было <b>вообще ни одного</b>. Люди ищут «гостиница в магнитогорске тбанк» и телефон банка, попадают на нашу страницу контактов и, естественно, никуда не переходят.</p>
+      <p>То есть показы не выросли — <b>они разбавились мусором</b>, и за этим разбавлением пряталось настоящее падение. Такая же история с показами из Москвы: их доля выросла до 55%, но это не московские гости, а сервисы, которые автоматически проверяют места сайтов в выдаче.</p>
+      <p style="color:var(--ink)"><b>Практический вывод для вас:</b> когда в отчётах Яндекса «показы растут» — это само по себе не хорошая новость. Смотреть надо на переходы и на место в выдаче.</p>
+    </div>
+  </section>
+
+  <!-- ВЫДАЧА -->
+  <section id="vydacha">
+    <div class="sec-head"><h2>Кто занял наше место в поиске</h2></div>
+    <p class="lead-in">Мы открыли поиск и посмотрели глазами обычного человека, что он видит по нашим запросам. Плюс отдельно измерили, сколько вообще людей ищут гостиницу в Магнитогорске.</p>
+
+    <h3 class="sub">Рынок в городе есть — и он больше, чем мы думали</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Что ищут жители Магнитогорска</th><th class="num">раз в месяц</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>«гостиница магнитогорск» и похожие</td><td class="num">1 317</td></tr>
+          <tr><td>«магнитогорск отели» / «отель магнитогорск»</td><td class="num">951</td></tr>
+          <tr><td>«магнитогорск снять квартиру посуточно»</td><td class="num">526</td></tr>
+          <tr><td>«гостевой дом магнитогорск»</td><td class="num">8</td></tr>
+          <tr><td>«хоум отель магнитогорск» (по названию)</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead-in" style="margin-top:-6px">Раньше мы предполагали, что гостиницу в Магнитогорске ищут в основном приезжие, а местные — нет. <b>Это оказалось неверно:</b> сам город даёт почти половину всего областного спроса. Правильная формулировка другая и куда неприятнее: <b>рынок есть, а нашей доли в нём нет.</b></p>
+
+    <h3 class="sub">Почему нашей доли нет</h3>
+    <div class="box">
+      <ul>
+        <li><b>Верх выдачи занят картами и агрегаторами.</b> По общим запросам первые места держат Яндекс Карты, 2ГИС, 101hotels, Яндекс Путешествия, Островок. Из местных выше нас — «Притяжение» и «Корона».</li>
+        <li><b>Ниже 10-го места переходов не бывает вообще.</b> Мы проверили это на четырёх независимых срезах данных: первые три места дают 12–34% переходов, места с 4-го по 10-е — единичные переходы, ниже 10-го — ровно ноль. Всегда.</li>
+        <li><b>Поэтому «подтянуть сайт с 15-го места на 8-е» бессмысленно.</b> Это не даст ни одного посетителя. Смысл есть только в борьбе за первую тройку — и это долгая работа против сильных площадок.</li>
+        <li><b>Весь «чистый» рынок города — около 480 переходов в месяц на всех игроков вместе.</b> Это трезвый потолок: даже идеальный результат в бесплатном поиске не превратит его в тысячи посетителей.</li>
+      </ul>
+    </div>
+
+    <h3 class="sub">По собственному названию мы восьмые — и это уже про деньги</h3>
+    <div class="box bad-b">
+      <p style="color:var(--ink)">Когда человек набирает «бизнес отель магнитогорск» — то есть <b>ищет именно вас</b>, — ваше рекламное объявление стоит <b>восьмым</b>. Выше семь чужих, и пять из них — посредники, которые продают ваши же номера: Яндекс Путешествия (три объявления), Т-Путешествия, Островок.</p>
+        <p style="color:var(--ink)">Отдельно проверили давнее подозрение, что бренд перехватывает отель «Форум». <b>Не подтвердилось</b>: в рекламе его нет вовсе, а в бесплатной выдаче по вашему названию вы первый. Перехватывают именно агрегаторы.</p>
+      <p style="color:var(--ink)"><b>И ещё одно наблюдение, которое стоит вашего внимания.</b> Карточки обоих объектов в Яндекс Бизнесе есть и подтверждены, но кнопка бронирования в них ведёт <b>в Яндекс Путешествия</b> — то есть к тому самому посреднику, который потом стоит выше вас в рекламе по вашему же названию. Разберёмся, можно ли это переключить.</p>
+    </div>
+  </section>
+
+  <!-- РЕКЛАМА -->
+  <section id="reklama">
+    <div class="sec-head"><h2>Хорошая новость: реклама держит удар</h2></div>
+    <p class="lead-in">Главный вопрос, ради которого всё это затевалось: раз бесплатный поиск потерял общие запросы — мы вообще участвуем в этом спросе или нет? Ответ: участвуем, через рекламу, и это лучшее, что у нас сейчас есть.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Запрос «гостиница магнитогорск» в рекламе</th><th class="num">переходов</th><th class="num">обращений</th><th class="num">цена обращения</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Бизнес-отель</td><td class="num">47</td><td class="num">4</td><td class="num"><b>≈1 900 ₽</b></td></tr>
+          <tr><td>Гостевой дом «Хоум»</td><td class="num">75</td><td class="num">1</td><td class="num">≈11 200 ₽</td></tr>
+          <tr><td>Средняя цена обращения по кампании Бизнес-отеля</td><td class="num">—</td><td class="num">—</td><td class="num">2 760 ₽</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead-in" style="margin-top:-6px;font-size:13px;color:var(--ink-faint)">Данные за 90 дней, суммы с НДС. «Обращение» — звонок-клик, сообщение в мессенджер или форма на сайте.</p>
+
+    <div class="box good-b">
+      <h3>Что из этого следует</h3>
+      <p style="color:var(--ink)"><b>Для Бизнес-отеля:</b> запрос, который мы потеряли в бесплатном поиске, реклама выкупает <b>дешевле среднего по кампании</b> — 1 900 ₽ против 2 760 ₽. Это лучшая фраза кампании. Значит соблазн «давайте лучше вернём бесплатный поиск вместо рекламы» — ложный: покупка работает уже сейчас, а возвращение в первую тройку от нас не зависит и займёт месяцы.</p>
+      <p style="color:var(--ink)"><b>Для «Хоума» — тревожный сигнал.</b> Тот же самый запрос, те же люди, переходов даже больше (75 против 47) — а обращение стоит в шесть раз дороже. Дело не в рекламе: трафик мы покупаем одинаковый. Разница возникает уже <b>на сайте</b> — люди приходят и не обращаются. Это и есть главная точка приложения усилий по «Хоуму», и она в тексте и предложении, а не в настройках кампании.</p>
+    </div>
+  </section>
+
+  <!-- ДЕНЬГИ -->
+  <section id="dengi">
+    <div class="sec-head"><h2>Где деньги уходят зря</h2><span class="tag">это мы правим сами</span></div>
+    <p class="lead-in">По ходу исследования мы прошли рекламный кабинет насквозь и нашли три места, где бюджет тратится без отдачи. Все три правки обратимые, вашего решения не требуют — сообщаем, чтобы вы знали, куда пойдут деньги.</p>
+
+    <div class="metrics" style="margin-bottom:18px">
+      <div class="mrow"><div class="m-name">Показы за пределами России<span>реклама включена на ~115 стран и регионов, вплоть до Боливии</span></div><div class="m-right"><span class="nums"><b>≈4 600 ₽/мес</b> · 1 заявка за квартал</span><span class="chip bad">убрать</span></div></div>
+      <div class="mrow"><div class="m-name">Группа «конкуренты» у «Хоума»<span>показы тем, кто ищет другие гостиницы</span></div><div class="m-right"><span class="nums">≈5 000 ₽ за обращение</span><span class="chip bad">выключить</span></div></div>
+      <div class="mrow"><div class="m-name">Та же группа «конкуренты» у Бизнес-отеля<span>то же название, обратное поведение</span></div><div class="m-right"><span class="nums">≈2 300 ₽ за обращение</span><span class="chip good">лучшая в кампании — не трогаем</span></div></div>
+      <div class="mrow"><div class="m-name">Отдельные группы «только по городу»<span>показы жителям Магнитогорска</span></div><div class="m-right"><span class="nums">≈6 300 ₽ за квартал · 1 заявка</span><span class="chip warn">понизить, но не выключать</span></div></div>
+      <div class="mrow"><div class="m-name">Список запретных слов (минус-слова)<span>чтобы не платить за «работа в гостинице», «передержка животных», «аквапарк»</span></div><div class="m-right"><span class="nums">накоплено ~30 слов</span><span class="chip warn">завести пакетом</span></div></div>
+    </div>
+
+    <div class="box">
+      <p><b>Почему городские группы не выключаем совсем.</b> Экономика у них плохая, это факт. Но выключить их «потому что в городе нет спроса» было бы ошибкой: спрос как раз есть — 1 317 запросов в месяц. Мы в нём просто не участвуем. Присутствие по своему городу нужно, поэтому мы понижаем их приоритет, а не убираем.</p>
+      <p><b>Про бюджет.</b> Вы подтвердили подъём до 100 000 ₽/мес с НДС — поднимаем по одной кампании за раз, чтобы было видно эффект каждой. Через две недели после подъёма сверим цену обращения: если она вырастет больше чем на 30% к сегодняшней, откатим назад.</p>
+    </div>
+  </section>
+
+  <!-- САЙТЫ -->
+  <section id="sayty">
+    <div class="sec-head"><h2>Что с сайтами</h2></div>
+    <p class="lead-in">Здесь короткий, но неприятный результат — и одновременно понятный список работ.</p>
+
+    <div class="tiles">
+      <div class="tile big">
+        <p class="k">Весь бесплатный поиск Бизнес-отеля — это</p>
+        <p class="v">1 страница</p>
+        <p class="k" style="margin:6px 0 0">главная даёт 88% всех переходов</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Весь бесплатный поиск «Хоума» — это</p>
+        <p class="v">1 страница</p>
+        <p class="k" style="margin:6px 0 0">главная даёт 100% переходов</p>
+      </div>
+      <div class="tile big">
+        <p class="k">Страницы номеров</p>
+        <p class="v" style="font-size:19px">В поиске есть, но не работают</p>
+        <p class="k" style="margin:6px 0 0">12 карточек: 8 показов за две недели у одного сайта, 0 у другого</p>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Что это значит и что делаем</h3>
+      <ul>
+        <li><b>Работа №1 — главная страница обоих сайтов.</b> Раз она тащит на себе весь бесплатный поиск, любые улучшения имеет смысл начинать с неё. Сейчас на обеих главных нет даже заголовка страницы в том виде, в каком его ждёт поиск, — это правится быстро.</li>
+        <li><b>Задача формулируется как «перестать проваливаться», а не «выйти в топ».</b> Сайты умеют всплывать в первую тройку и там отлично собирают переходы, но держатся там нестабильно. Это другая, более выполнимая работа, чем «завоевать топ с нуля».</li>
+        <li><b>Страницы номеров нужно переписать.</b> Они <b>есть</b> в поиске — то есть проблема не в том, что Яндекс их не видит, и переобход тут не поможет. Проблема в том, что они одинаковые и пустые: без своего заголовка, цены, вместимости. Без этой правки не заработает и бесплатный блок из следующего раздела — он ссылается ровно на эти страницы.</li>
+        <li><b>Мелкий, но обидный дефект:</b> на сайте Бизнес-отеля служебные страницы («спасибо за заявку», «ошибка») попали в поиск из-за опечатки в одном техническом файле. У «Хоума» тот же файл написан правильно, и таких страниц в поиске нет. Правка на минуту.</li>
+      </ul>
+      <p style="margin-top:12px"><b>От вас по сайтам сейчас ничего не нужно.</b> Мы собрали все дефекты списком (10 пунктов) и передадим разработчикам одним пакетом — вам останется только сказать «делаем».</p>
+    </div>
+  </section>
+
+  <!-- БЕСПЛАТНЫЙ КАНАЛ -->
+  <section id="besplatno">
+    <div class="sec-head"><h2>Бесплатный канал, который стоит попробовать</h2><span class="tag">находка исследования</span></div>
+
+    <div class="box good-b">
+      <p style="color:var(--ink)">У Яндекса есть блок «Услуги и предложения в поиске» — бесплатный. В нём можно разместить объекты <b>посуточной аренды</b>: комната или квартира, цена за сутки, фото, ссылка на страницу. Важное свойство: <b>он не требует хороших мест в бесплатном поиске</b> — то есть обходит ровно ту стену, о которую мы бьёмся весь этот отчёт.</p>
+      <p style="color:var(--ink)"><b>Техническую часть мы уже проверили сами:</b> собрали пробные файлы с номерами обоих объектов и прогнали через проверку Яндекса — формат принимается. Отдельного «гостиничного» формата не нужно, подходит категория для посуточной аренды.</p>
+      <p style="color:var(--ink)"><b>Но по цене туда проходит только «Хоум».</b> Посуточная аренда в городе стоит 1 000–3 000 ₽ за сутки, номера «Хоума» — 3 900–4 800 ₽ (это верхняя граница рынка, но всё же рынок), номера Бизнес-отеля — 7 125–7 600 ₽, то есть вне этого рынка совсем.</p>
+      <p style="color:var(--ink)">Осталось не техническое: согласится ли Яндекс показывать номера среди объектов посуточной аренды, и хотите ли вы там присутствовать. Это вопрос к вам — он ниже.</p>
+    </div>
+  </section>
+
+  <!-- ПЛАН -->
+  <section id="plan">
+    <div class="sec-head"><h2>Что делаем дальше</h2><span class="tag">по порядку, без вашего участия</span></div>
+
+    <div class="rec">
+      <div class="num">1</div>
+      <div class="body">
+        <h4>Убираем утечки в рекламе</h4>
+        <p><b>Что:</b> выключаем показы за пределами России, гасим убыточную группу «конкуренты» у «Хоума», заводим пакет запретных слов, понижаем приоритет городских групп.</p>
+        <p class="why">→ ≈4 600 ₽ в месяц перестают уходить впустую и идут в работающие запросы</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">2</div>
+      <div class="body">
+        <h4>Поднимаем бюджет — по одной кампании за раз</h4>
+        <p><b>Что:</b> вы подтвердили 100 000 ₽/мес с НДС. Поднимаем ступенчато, фиксируем цену обращения до подъёма и сверяемся через две недели.</p>
+        <p class="why">→ больше обращений с канала, который уже доказал, что работает</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">3</div>
+      <div class="body">
+        <h4>Приводим в порядок главные страницы и карточки номеров</h4>
+        <p><b>Что:</b> список из 10 дефектов передаём разработчикам пакетом. Первые — заголовки главных страниц, служебные страницы в поиске, уникальные описания и цены у номеров.</p>
+        <p class="why">→ единственная страница, которая тащит бесплатный поиск, начинает работать в полную силу</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">4</div>
+      <div class="body">
+        <h4>Отдельно занимаемся «Хоумом»</h4>
+        <p><b>Что:</b> тот же трафик у него превращается в обращения в шесть раз хуже. Разбираем предложение и тексты на сайте — это не настройка рекламы, а содержание.</p>
+        <p class="why">→ те же деньги, больше обращений</p>
+      </div>
+    </div>
+    <div class="rec">
+      <div class="num">5</div>
+      <div class="body">
+        <h4>Продолжаем наблюдение автоматически</h4>
+        <p><b>Что:</b> данные, на которых построен этот отчёт, хранятся у Яндекса ограниченное время — часть исчезает через три месяца. Мы настроили регулярный автоматический сбор, чтобы следующий такой разбор строился на накопленной истории, а не собирался заново.</p>
+        <p class="why">→ через полгода мы сможем показать динамику, а не снимок</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОТ ВАС -->
+  <section id="ot-vas">
+    <div class="sec-head"><h2>Что нужно от вас</h2><span class="tag">четыре решения</span></div>
+    <p class="lead-in">Это вопросы, на которые нельзя ответить данными — только вашим решением. Мы подготовили по каждому всё, что можно было проверить самостоятельно.</p>
+
+    <div class="qa">
+      <h4>1. «Хоум»: как его продавать дальше?</h4>
+      <p>Это самый важный вопрос отчёта. По документам объект — <b>гостевой дом</b>, и называть его отелем или гостиницей в рекламе и на сайте нельзя. При этом «гостевой дом магнитогорск» в городе ищут <b>8 раз в месяц</b>, а «гостиница магнитогорск» — <b>1 317</b>. Разрешённая формулировка ведёт на рынок, которого фактически нет.</p>
+      <p><b>Варианты:</b></p>
+      <ul class="opts">
+        <li><b>Пройти классификацию</b> и получить право называться гостиницей — открывает весь общий спрос, но это время и деньги на процедуру.</li>
+        <li><b>Оставить как есть</b> — тогда весь общий спрос «Хоум» покупает только рекламой, всегда. Бесплатного поиска по общим запросам у него не будет никогда.</li>
+        <li><b>Зайти в посуточную аренду</b> — «номера посуточно» как альтернатива съёмной квартире. Рынок в городе 526 запросов в месяц, по цене «Хоум» на верхней границе, формулировки разрешены. Сейчас мы, наоборот, сами исключили слова «посуточно», «аренда», «квартира» из рекламы — их пришлось бы вернуть.</li>
+      </ul>
+    </div>
+
+    <div class="qa">
+      <h4>2. Отдаём ли номера в бесплатный блок Яндекса?</h4>
+      <p>Речь про блок посуточной аренды из раздела выше. Нужно: <b>(1)</b> принципиальное согласие; <b>(2)</b> кто готовит файл с номерами — разработчик сайта или мы скриптом; <b>(3)</b> готовность держать цены в нём актуальными — иначе получим расхождение цен между рекламой и сайтом, а это уже риск претензии.</p>
+      <p>Напомним, что по цене туда проходит только «Хоум».</p>
+    </div>
+
+    <div class="qa">
+      <h4>3. Горнолыжники — ваш гость или нет?</h4>
+      <p>Спрос по Абзаково и Банному огромный — <b>750 переходов в месяц</b>, это больше, чем весь гостиничный рынок Магнитогорска. Но он <b>адресный</b>: люди ищут конкретные курортные отели («Горки», «Санрайз»), а не «где переночевать рядом со склоном». За две проверенные недели — зимнюю и летнюю — к вашим сайтам не пришло <b>ни одного</b> горнолыжного запроса.</p>
+      <p><b>Решение:</b> ловим этого гостя целенаправленно (ночёвка в городе дешевле курорта + трансфер, отдельная страница и кампания) — или признаём, что это не наша аудитория, и зимой бюджет туда не идёт. От ответа зависит зимняя раскладка.</p>
+    </div>
+
+    <div class="qa">
+      <h4>4. Раздел «достопримечательности» на сайте Бизнес-отеля</h4>
+      <p>Раздел про Лукоморье, куранты, «Тыл — фронту» собирает <b>пятую часть всех показов сайта</b> и почти ноль переходов. Тема сама по себе живая (439 переходов в месяц по всему интернету), но её держат Дзен, Tripadvisor и городской турпортал, а связь с бронированием слабая.</p>
+      <p><b>Варианты:</b> переписать под связку «где остановиться рядом с …», закрыть от поиска, или оставить как есть и просто вычитать из статистики. Это ваш контент и ваши деньги на переделку, поэтому решение за вами.</p>
+    </div>
+  </section>
+
+  <div class="caveats">
+    <h3>Чтобы читать честно</h3>
+    <ul>
+      <li><b>Все суммы в этом отчёте — с НДС</b>, то есть так, как вы их платите. В прошлом отчёте цена обращения приводилась так, как её показывает рекламный кабинет, — без НДС. Для сверки: 1 900 ₽ с НДС здесь = 1 582 ₽ в кабинете.</li>
+      <li><b>«Обращение» ≠ заселение.</b> Это звонок-клик, сообщение в мессенджер или форма на сайте — заявка об интересе. До реальной брони доходит часть обращений.</li>
+      <li><b>Сравнение «январь против июля» — это две недели, а не два сезона.</b> Мы делаем из него вывод о направлении (позиции упали) и о составе запросов, а не о точных объёмах. Годовые объёмы взяты из 18-месячной истории — это другой, более надёжный источник.</li>
+      <li><b>Оценка потерь на зарубежных показах — оценка, а не точный счёт.</b> Яндекс не даёт разбивку расхода по странам напрямую, мы считали через долю визитов в Метрике.</li>
+      <li><b>Часть цифр по группам рекламы стоит на маленькой базе</b> (1–4 обращения за три месяца). Там, где база меньше четырёх, мы решений не принимаем — только наблюдаем.</li>
+      <li><b>«Переходы из бесплатного поиска» — это не визиты сайта в целом.</b> Реклама, прямые заходы и переходы по названию считаются отдельно и в графиках этого отчёта не участвуют.</li>
+    </ul>
+  </div>
+
+  <p class="foot">Отчёт подготовлен в рамках управления рекламой через LidFly · 30.07.2026</p>
+
+</div>
+
+</body>
+</html>
